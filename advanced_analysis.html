@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Foundation 3D Failure Axes for Embodied Spatial Intelligence</title>
+  <title>CVPR 2026 3D Reconstruction Field Futures Map</title>
   <style>
     :root {
       --ink: #16181c;
@@ -173,19 +173,21 @@
 <body>
   <header>
     <div class="wrap">
-      <h1>Foundation 3D가 아직 책임지지 않는 실패들</h1>
-      <p class="muted">CVPR 2026 3D reconstruction을 trend taxonomy가 아니라, embodied spatial intelligence가 앞으로 피할 수 없게 될 failure axis와 benchmark agenda로 다시 읽은 분석.</p>
+      <h1>CVPR 2026 3D Reconstruction Field Futures Map</h1>
+      <p class="muted">3D reconstruction의 미래를 하나의 thesis로 닫지 않고, 서로 경쟁하고 결합하는 여섯 개의 future option space로 다시 그린 분석.</p>
       <div class="page-tabs" aria-label="Page navigation">
         <a class="page-tab" href="index.html">Core Analysis</a>
         <a class="page-tab active" href="advanced_analysis.html">Advanced Analysis</a>
         <a class="page-tab" href="cvpr2026_3d_recon_method_and_results_ko.html">Methods / Results</a>
       </div>
       <div class="thesis">
-        핵심 판정: 좋은 연구주제는 새로운 3D model을 하나 더 만드는 것이 아니라,
-        foundation 3D가 agent decision에 들어갈 때 발생하는 실패를 이름 붙이고 측정 가능하게 만드는 것이다.
-        다음 경쟁은 reconstruction score가 아니라 failure language, benchmark, liability boundary를 누가 정의하는가이다.
+        핵심 판정: CVPR 2026의 3D reconstruction은 하나의 미래로 수렴하지 않는다.
+        그것은 agent state, generative control, spatial data engine, digital twin, long-horizon memory,
+        evaluation governance라는 여섯 개의 미래로 갈라지고 있다.
+        좋은 연구전략은 이 중 하나를 고르는 것이 아니라, 어떤 미래들이 충돌하고 어떤 interface가 병목이 될지 먼저 읽는 것이다.
       </div>
       <div class="toc">
+        <a href="#field-futures-map">Field Futures Map</a>
         <a href="#failure-axis-agenda">Failure Axis Agenda</a>
         <a href="#executed-analysis">실제 적용 결과</a>
         <a href="#strategic-theses">Three Strategic Theses</a>
@@ -200,8 +202,133 @@
   </header>
 
   <main class="wrap">
+    <section id="field-futures-map">
+      <h2>0. 왜 하나의 thesis로는 부족한가</h2>
+      <p>
+        지금까지의 분석은 점점 더 강한 하나의 축을 찾으려 했다.
+        `world-state compiler`, `trust kernel`, `liability boundary`, `failure-axis agenda`는 모두 유효한 축이다.
+        하지만 그것만으로 CVPR 2026 3D reconstruction 전체의 미래를 요약하면 사고가 다시 좁아진다.
+        3D reconstruction은 robotics/SLAM만의 문제가 아니고, failure benchmark만의 문제도 아니다.
+      </p>
+      <div class="warning">
+        한 줄 thesis는 방향을 선명하게 만들지만, 동시에 다른 미래를 지운다.
+        이 분야는 하나의 objective로 수렴하는 것이 아니라, 서로 다른 objective들이 3D라는 공통 substrate를 두고 경쟁하는 장으로 가고 있다.
+      </div>
+
+      <h3>0.1 Six possible futures of 3D reconstruction</h3>
+      <table>
+        <thead>
+          <tr><th>Future</th><th>무엇을 최적화하는가</th><th>무엇을 숨기는가</th><th>필요한 benchmark / 연구 wedge</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1. 3D as World-State for Agents</strong></td>
+            <td>Agent가 믿고 행동할 수 있는 state. navigation, manipulation, planning, recovery에 쓰이는 actionable geometry.</td>
+            <td>Visual fidelity가 action relevance를 보장하지 않는다는 점. downstream failure가 reconstruction metric에 보이지 않는다는 점.</td>
+            <td>trust kernel, action-relevant geometry, active recovery, liability benchmark.</td>
+          </tr>
+          <tr>
+            <td><strong>2. 3D as Generative Control Plane</strong></td>
+            <td>Video/world generation을 제어하는 scaffold. camera control, scene consistency, editable 4D, controllable world synthesis.</td>
+            <td>3D가 truth recovery가 아니라 generation control handle로 소비될 수 있다는 점. metric correctness가 약해질 수 있다는 점.</td>
+            <td>geometry-conditioned video generation, camera-controllable world generation, generation-reconstruction loop, editable 4D scene protocol.</td>
+          </tr>
+          <tr>
+            <td><strong>3. 3D as Spatial Data Engine</strong></td>
+            <td>대규모 3D foundation model을 키우는 data flywheel. unlabeled multiview, synthetic-real mixing, self-supervised 3D pretraining.</td>
+            <td>좋은 model의 차이가 architecture보다 data curation과 curriculum에서 날 수 있다는 점.</td>
+            <td>geometry-aware data filtering, 3D pretraining curriculum, synthetic-to-real stress split, self-improving reconstruction dataset.</td>
+          </tr>
+          <tr>
+            <td><strong>4. 3D as Digital Twin Infrastructure</strong></td>
+            <td>산업/도시/제조/건설/물류 현장을 계속 갱신하는 operational twin. monitoring, prediction, maintenance, change detection.</td>
+            <td>한 번 만든 asset보다 update cost, sensor drift, change validity, operational latency가 더 중요하다는 점.</td>
+            <td>change-aware reconstruction, degradation-aware twin, drift/update policy, cost-aware reconstruction benchmark.</td>
+          </tr>
+          <tr>
+            <td><strong>5. 3D as Embodied Memory / Long-Horizon Context</strong></td>
+            <td>Agent나 system이 장면을 오래 기억하고 다시 불러오는 persistent spatial memory. object identity, memory compression, forgetting.</td>
+            <td>모든 geometry를 저장하는 것이 지능이 아니라 무엇을 기억하고 지울지 결정하는 것이 핵심이라는 점.</td>
+            <td>persistent memory benchmark, object re-identification over time, semantic-geometric conflict resolution, memory budget vs task success.</td>
+          </tr>
+          <tr>
+            <td><strong>6. 3D as Evaluation / Governance Layer</strong></td>
+            <td>3D state를 언제 신뢰하면 안 되는지 정의하는 rule-setting layer. failure language, liability boundary, abstention.</td>
+            <td>field를 지배하는 것은 method가 아니라 metric과 죄목일 수 있다는 점.</td>
+            <td>failure taxonomy, liability benchmark, abstention metric, cross-domain evaluation protocol.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>0.2 Future 간 충돌이 진짜 신호다</h3>
+      <table>
+        <thead>
+          <tr><th>충돌</th><th>왜 중요한가</th><th>연구 기회</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Generative control vs Metric truth</td>
+            <td>생성 모델은 controllability와 plausibility를 원하지만, agent state와 digital twin은 metric accountability를 원한다.</td>
+            <td>plausible geometry와 accountable geometry를 구분하는 metric, generation output의 geometric liability audit.</td>
+          </tr>
+          <tr>
+            <td>Data engine vs Evaluation governance</td>
+            <td>대규모 pretraining은 scale을 밀지만, evaluation layer는 어떤 data가 위험한 failure를 숨기는지 묻는다.</td>
+            <td>geometry-aware data curation, failure-balanced pretraining set, blind-spot mining.</td>
+          </tr>
+          <tr>
+            <td>Digital twin vs Long-horizon memory</td>
+            <td>digital twin은 지속 갱신을 원하고, memory system은 압축과 forgetting을 원한다.</td>
+            <td>update cost와 memory budget을 함께 보는 persistent twin benchmark.</td>
+          </tr>
+          <tr>
+            <td>Agent state vs Passive reconstruction</td>
+            <td>agent는 더 봐야 할지 결정해야 하지만, 대부분 benchmark는 주어진 view에서 output만 평가한다.</td>
+            <td>active acquisition policy, recovery view budget, information gain under motion cost.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>0.3 Portfolio view: 무엇을 버리고 무엇을 잡을까</h3>
+      <div class="claim">
+        좋은 랩 전략은 여섯 future 중 하나를 정답으로 고르는 것이 아니다.
+        핵심은 서로 다른 future가 만나는 interface를 잡는 것이다.
+        예를 들어 `Generative Control Plane`과 `Evaluation Governance`가 만나는 지점은
+        generated 3D world의 truthfulness benchmark가 되고,
+        `World-State for Agents`와 `Spatial Data Engine`이 만나는 지점은
+        action-relevant 3D pretraining data curation이 된다.
+      </div>
+      <table>
+        <thead>
+          <tr><th>Interface bet</th><th>왜 강한가</th><th>첫 논문 형태</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Agent State x Evaluation Governance</td>
+            <td>robotics/embodied deployment가 커질수록 3D state의 책임 경계가 피할 수 없는 문제가 된다.</td>
+            <td>Foundation 3D liability benchmark.</td>
+          </tr>
+          <tr>
+            <td>Generative Control x Metric Truth</td>
+            <td>world generation이 커질수록 plausible 3D와 physically accountable 3D의 차이가 커진다.</td>
+            <td>Geometry truthfulness audit for generated 4D worlds.</td>
+          </tr>
+          <tr>
+            <td>Spatial Data Engine x Failure Mining</td>
+            <td>대형 모델 경쟁에서 작은 랩이 잡을 수 있는 축은 data scale이 아니라 blind-spot mining이다.</td>
+            <td>Failure-balanced 3D pretraining dataset / curation protocol.</td>
+          </tr>
+          <tr>
+            <td>Digital Twin x Long-Horizon Memory</td>
+            <td>operational twin은 한 번 복원하는 문제가 아니라 무엇을 언제 갱신할지의 문제다.</td>
+            <td>Change-aware persistent spatial memory benchmark.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
     <section id="failure-axis-agenda">
-      <h2>0. Trend thesis에서 failure-axis proposal로</h2>
+      <h2>1. Failure Axis Agenda: trend thesis에서 연구주제 제안으로</h2>
       <p>
         이전 분석의 약점은 "3D reconstruction이 spatial memory / world-state compiler / trust kernel로 간다"는 큰 방향을 말했지만,
         그 방향이 곧바로 연구주제 선정의 새 축으로 바뀌지는 않았다는 점이다.
@@ -372,7 +499,7 @@
     </section>
 
     <section id="executed-analysis">
-      <h2>1. Supporting Evidence: 436편 core/bridge를 다시 읽으면 무엇이 보이는가</h2>
+      <h2>2. Supporting Evidence: 436편 core/bridge를 다시 읽으면 무엇이 보이는가</h2>
       <p>
         이 페이지의 advanced taxonomy를 실제 CVPR 2026 3D reconstruction curated set에 적용했다.
         기준은 864편 strict 후보 중 `core_reconstruction` 362편과 `strong_bridge` 74편, 총 436편이다.
@@ -596,7 +723,7 @@
     </section>
 
     <section id="strategic-theses">
-      <h2>2. Three Strategic Theses: taxonomy를 넘어선 field memo</h2>
+      <h2>3. Three Strategic Theses: taxonomy를 넘어선 field memo</h2>
       <div class="warning">
         아래 세 thesis는 기존 taxonomy를 더 정교하게 만드는 목적이 아니다. 오히려 taxonomy가 가리는 것을 드러내기 위한 내부 전략 메모다.
         핵심 질문은 "무슨 주제가 많은가"가 아니라, "3D reconstruction이라는 이름 아래 실제로 어떤 권력과 책임 경계가 재편되는가"다.
@@ -791,7 +918,7 @@
     </section>
 
     <section id="why">
-      <h2>3. 왜 taxonomy를 고쳐야 하는가</h2>
+      <h2>4. 왜 taxonomy를 고쳐야 하는가</h2>
       <p>
         기존 taxonomy는 `3DGS`, `NeRF`, `VGGT`, `dynamic 4D`, `SLAM / localization`, `embodied AI`,
         `metric evaluation`처럼 보이는 주제군을 정리한다. 이것은 현재 논문 분포를 읽는 데는 충분하다.
@@ -807,7 +934,7 @@
     </section>
 
     <section id="layers">
-      <h2>4. 새 5층 taxonomy</h2>
+      <h2>5. 새 5층 taxonomy</h2>
       <table>
         <thead>
           <tr><th>Layer</th><th>질문</th><th>예시</th></tr>
@@ -843,7 +970,7 @@
     </section>
 
     <section id="field-shift">
-      <h2>5. Latent Field-Shift Taxonomy</h2>
+      <h2>6. Latent Field-Shift Taxonomy</h2>
       <div class="grid">
         <div class="panel prior">
           <h3>Amortized Geometry Prior</h3>
@@ -885,7 +1012,7 @@
     </section>
 
     <section id="negative-space">
-      <h2>6. Negative Space: 현재 taxonomy가 직접 말하지 않는 것</h2>
+      <h2>7. Negative Space: 현재 taxonomy가 직접 말하지 않는 것</h2>
       <table>
         <thead>
           <tr><th>Unseen Trend</th><th>왜 중요한가</th><th>연구적 전환</th></tr>
@@ -924,7 +1051,7 @@
     </section>
 
     <section id="agenda">
-      <h2>7. Flagship Agenda</h2>
+      <h2>8. Flagship Agenda</h2>
       <div class="thesis">
         Reliability-Aware Spatial Memory for Embodied Foundation Models
       </div>
@@ -958,7 +1085,7 @@
     </section>
 
     <section id="actions">
-      <h2>8. 실행계획과 완료된 반영</h2>
+      <h2>9. 실행계획과 완료된 반영</h2>
       <ol>
         <li>기존 분석의 method taxonomy를 `Observed Topic Taxonomy`로 보존했다.</li>
         <li>436편 core/bridge set을 `Functional Role`, `Hidden Pressure`, `Strategic Bet` 기준으로 재해석했다.</li>

@@ -8,6 +8,38 @@
 
 따라서 기존 taxonomy를 폐기할 필요는 없다. 오히려 기존 taxonomy를 `Observed Layer`로 유지하고, 그 위에 `Functional Role`, `Hidden Pressure`, `Negative Space`, `Strategic Bet`를 얹어야 한다.
 
+## Field Futures Map: 하나의 thesis로는 부족하다
+
+이전 분석의 문제는 하나의 더 강한 중심축을 계속 찾으려 했다는 점이다. `world-state compiler`, `trust kernel`, `liability boundary`, `failure-axis agenda`는 모두 유효한 축이다. 하지만 그것만으로 CVPR 2026 3D reconstruction 전체의 미래를 요약하면 사고가 다시 좁아진다.
+
+더 좋은 관점은 3D reconstruction이 하나의 미래로 수렴하지 않고, 서로 경쟁하고 결합하는 여러 future option으로 갈라진다는 것이다.
+
+> CVPR 2026의 3D reconstruction은 하나의 미래로 수렴하지 않는다. 그것은 agent state, generative control, spatial data engine, digital twin, long-horizon memory, evaluation governance라는 여섯 개의 미래로 갈라지고 있다. 좋은 연구전략은 이 중 하나를 고르는 것이 아니라, 어떤 미래들이 충돌하고 어떤 interface가 병목이 될지 먼저 읽는 것이다.
+
+### Six possible futures of 3D reconstruction
+
+| Future | 무엇을 최적화하는가 | 무엇을 숨기는가 | 필요한 benchmark / 연구 wedge |
+|---|---|---|---|
+| 3D as World-State for Agents | Agent가 믿고 행동할 수 있는 state. navigation, manipulation, planning, recovery에 쓰이는 actionable geometry. | Visual fidelity가 action relevance를 보장하지 않는다는 점. downstream failure가 reconstruction metric에 보이지 않는다는 점. | trust kernel, action-relevant geometry, active recovery, liability benchmark |
+| 3D as Generative Control Plane | Video/world generation을 제어하는 scaffold. camera control, scene consistency, editable 4D, controllable world synthesis. | 3D가 truth recovery가 아니라 generation control handle로 소비될 수 있다는 점. metric correctness가 약해질 수 있다는 점. | geometry-conditioned video generation, camera-controllable world generation, generation-reconstruction loop, editable 4D scene protocol |
+| 3D as Spatial Data Engine | 대규모 3D foundation model을 키우는 data flywheel. unlabeled multiview, synthetic-real mixing, self-supervised 3D pretraining. | 좋은 model의 차이가 architecture보다 data curation과 curriculum에서 날 수 있다는 점. | geometry-aware data filtering, 3D pretraining curriculum, synthetic-to-real stress split, self-improving reconstruction dataset |
+| 3D as Digital Twin Infrastructure | 산업/도시/제조/건설/물류 현장을 계속 갱신하는 operational twin. monitoring, prediction, maintenance, change detection. | 한 번 만든 asset보다 update cost, sensor drift, change validity, operational latency가 더 중요하다는 점. | change-aware reconstruction, degradation-aware twin, drift/update policy, cost-aware reconstruction benchmark |
+| 3D as Embodied Memory / Long-Horizon Context | Agent나 system이 장면을 오래 기억하고 다시 불러오는 persistent spatial memory. object identity, memory compression, forgetting. | 모든 geometry를 저장하는 것이 지능이 아니라 무엇을 기억하고 지울지 결정하는 것이 핵심이라는 점. | persistent memory benchmark, object re-identification over time, semantic-geometric conflict resolution, memory budget vs task success |
+| 3D as Evaluation / Governance Layer | 3D state를 언제 신뢰하면 안 되는지 정의하는 rule-setting layer. failure language, liability boundary, abstention. | field를 지배하는 것은 method가 아니라 metric과 죄목일 수 있다는 점. | failure taxonomy, liability benchmark, abstention metric, cross-domain evaluation protocol |
+
+### Future 간 충돌이 진짜 신호다
+
+| 충돌 | 왜 중요한가 | 연구 기회 |
+|---|---|---|
+| Generative control vs Metric truth | 생성 모델은 controllability와 plausibility를 원하지만, agent state와 digital twin은 metric accountability를 원한다. | plausible geometry와 accountable geometry를 구분하는 metric, generation output의 geometric liability audit |
+| Data engine vs Evaluation governance | 대규모 pretraining은 scale을 밀지만, evaluation layer는 어떤 data가 위험한 failure를 숨기는지 묻는다. | geometry-aware data curation, failure-balanced pretraining set, blind-spot mining |
+| Digital twin vs Long-horizon memory | digital twin은 지속 갱신을 원하고, memory system은 압축과 forgetting을 원한다. | update cost와 memory budget을 함께 보는 persistent twin benchmark |
+| Agent state vs Passive reconstruction | agent는 더 봐야 할지 결정해야 하지만, 대부분 benchmark는 주어진 view에서 output만 평가한다. | active acquisition policy, recovery view budget, information gain under motion cost |
+
+### Portfolio view
+
+좋은 랩 전략은 여섯 future 중 하나를 정답으로 고르는 것이 아니다. 핵심은 서로 다른 future가 만나는 interface를 잡는 것이다. 예를 들어 `Generative Control Plane`과 `Evaluation Governance`가 만나는 지점은 generated 3D world의 truthfulness benchmark가 되고, `World-State for Agents`와 `Spatial Data Engine`이 만나는 지점은 action-relevant 3D pretraining data curation이 된다.
+
 ## Failure Axis Agenda: trend thesis에서 연구주제 제안으로
 
 기존 분석의 약점은 "3D reconstruction이 spatial memory / world-state compiler / trust kernel로 간다"는 큰 방향을 말했지만, 그 방향이 곧바로 연구주제 선정의 새 축으로 바뀌지는 않았다는 점이다. 더 강한 분석은 "어떤 주제가 뜨는가"가 아니라 **"분야 전체가 반복해서 실패하지만 아직 죄목으로 부르지 못하는 것은 무엇인가"**를 정의해야 한다.
