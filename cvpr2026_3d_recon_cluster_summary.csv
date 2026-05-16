@@ -1,0 +1,52 @@
+﻿section,name,count,label
+cluster,general_reconstruction,592,General 3D reconstruction / multiview
+cluster,surface_occupancy,561,Mesh / surface / implicit / occupancy
+cluster,data_benchmark,425,Dataset / benchmark / evaluation
+cluster,gaussian_radiance,333,Gaussian / radiance field / view synthesis
+cluster,dynamic_4d,271,Dynamic / 4D reconstruction
+cluster,depth_correspondence,267,Depth / stereo / dense correspondence
+cluster,pose_calibration_localization,256,Pose / calibration / localization
+cluster,robotics_mapping,251,Mapping / autonomous / embodied
+cluster,generation_editing,151,3D generation / editing bridge
+cluster,vggt_lineage,67,VGGT / feed-forward geometry
+role,core trend paper,417,
+role,important bridge paper,215,
+role,specialized geometry paper,118,
+role,adjacent / inspect manually,114,
+editorial_bucket,C. cluster representative,284,
+editorial_bucket,D. adjacent but useful context,268,
+editorial_bucket,A. thesis anchor: representation shift,159,
+editorial_bucket,A. thesis anchor: VGGT/feed-forward geometry,67,
+editorial_bucket,A. thesis anchor: dynamic/4D recon,40,
+editorial_bucket,B. bridge: reconstruction becomes mapping/world model,33,
+editorial_bucket,B. bridge: representation meets metric pose,13,
+cross_cluster,general_reconstruction + surface_occupancy,455,General 3D reconstruction / multiview / Mesh / surface / implicit / occupancy
+cross_cluster,data_benchmark + general_reconstruction,285,Dataset / benchmark / evaluation / General 3D reconstruction / multiview
+cross_cluster,data_benchmark + surface_occupancy,269,Dataset / benchmark / evaluation / Mesh / surface / implicit / occupancy
+cross_cluster,gaussian_radiance + general_reconstruction,228,Gaussian / radiance field / view synthesis / General 3D reconstruction / multiview
+cross_cluster,dynamic_4d + general_reconstruction,202,Dynamic / 4D reconstruction / General 3D reconstruction / multiview
+cross_cluster,gaussian_radiance + surface_occupancy,185,Gaussian / radiance field / view synthesis / Mesh / surface / implicit / occupancy
+cross_cluster,depth_correspondence + general_reconstruction,173,Depth / stereo / dense correspondence / General 3D reconstruction / multiview
+cross_cluster,depth_correspondence + surface_occupancy,171,Depth / stereo / dense correspondence / Mesh / surface / implicit / occupancy
+cross_cluster,dynamic_4d + surface_occupancy,171,Dynamic / 4D reconstruction / Mesh / surface / implicit / occupancy
+cross_cluster,data_benchmark + robotics_mapping,161,Dataset / benchmark / evaluation / Mapping / autonomous / embodied
+cross_cluster,robotics_mapping + surface_occupancy,160,Mapping / autonomous / embodied / Mesh / surface / implicit / occupancy
+cross_cluster,data_benchmark + gaussian_radiance,148,Dataset / benchmark / evaluation / Gaussian / radiance field / view synthesis
+cross_cluster,data_benchmark + dynamic_4d,145,Dataset / benchmark / evaluation / Dynamic / 4D reconstruction
+cross_cluster,general_reconstruction + robotics_mapping,141,General 3D reconstruction / multiview / Mapping / autonomous / embodied
+cross_cluster,data_benchmark + depth_correspondence,129,Dataset / benchmark / evaluation / Depth / stereo / dense correspondence
+cross_cluster,general_reconstruction + pose_calibration_localization,126,General 3D reconstruction / multiview / Pose / calibration / localization
+cross_cluster,data_benchmark + pose_calibration_localization,126,Dataset / benchmark / evaluation / Pose / calibration / localization
+cross_cluster,general_reconstruction + generation_editing,124,General 3D reconstruction / multiview / 3D generation / editing bridge
+cross_cluster,depth_correspondence + pose_calibration_localization,116,Depth / stereo / dense correspondence / Pose / calibration / localization
+cross_cluster,dynamic_4d + gaussian_radiance,112,Dynamic / 4D reconstruction / Gaussian / radiance field / view synthesis
+cross_cluster,pose_calibration_localization + surface_occupancy,111,Pose / calibration / localization / Mesh / surface / implicit / occupancy
+cross_cluster,generation_editing + surface_occupancy,109,3D generation / editing bridge / Mesh / surface / implicit / occupancy
+cross_cluster,depth_correspondence + gaussian_radiance,89,Depth / stereo / dense correspondence / Gaussian / radiance field / view synthesis
+cross_cluster,dynamic_4d + robotics_mapping,86,Dynamic / 4D reconstruction / Mapping / autonomous / embodied
+cross_cluster,dynamic_4d + generation_editing,83,Dynamic / 4D reconstruction / 3D generation / editing bridge
+cross_cluster,pose_calibration_localization + robotics_mapping,80,Pose / calibration / localization / Mapping / autonomous / embodied
+cross_cluster,depth_correspondence + dynamic_4d,77,Depth / stereo / dense correspondence / Dynamic / 4D reconstruction
+cross_cluster,gaussian_radiance + robotics_mapping,74,Gaussian / radiance field / view synthesis / Mapping / autonomous / embodied
+cross_cluster,depth_correspondence + robotics_mapping,70,Depth / stereo / dense correspondence / Mapping / autonomous / embodied
+cross_cluster,data_benchmark + generation_editing,69,Dataset / benchmark / evaluation / 3D generation / editing bridge

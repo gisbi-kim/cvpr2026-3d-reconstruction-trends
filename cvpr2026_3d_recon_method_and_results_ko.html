@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CVPR 2026 3D Reconstruction 분석 방법과 결과</title>
+  <style>
+    :root {
+      --ink: #171717;
+      --muted: #5f6368;
+      --line: #d9dee7;
+      --soft: #f6f8fb;
+      --blue: #235789;
+      --teal: #1b7f79;
+      --orange: #b85c00;
+      --red: #9b2c2c;
+      --green: #2d6a4f;
+      --violet: #5b4b8a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, "Noto Sans KR", sans-serif;
+      color: var(--ink);
+      background: #ffffff;
+      line-height: 1.58;
+    }
+    header {
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfe;
+    }
+    .wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 28px 28px;
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: 30px;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+    h2 {
+      margin: 34px 0 12px;
+      font-size: 22px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+    h3 {
+      margin: 22px 0 8px;
+      font-size: 17px;
+      letter-spacing: 0;
+    }
+    p { margin: 8px 0; }
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code {
+      background: #eef2f7;
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-size: 0.95em;
+    }
+    .muted { color: var(--muted); }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin: 18px 0;
+    }
+    .metric {
+      border: 1px solid var(--line);
+      background: var(--soft);
+      padding: 14px 14px;
+      border-radius: 8px;
+      min-height: 90px;
+    }
+    .metric strong {
+      display: block;
+      font-size: 28px;
+      line-height: 1.1;
+      margin-bottom: 5px;
+    }
+    .metric span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .toc {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+    .toc a {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: #ffffff;
+      color: #2b2f36;
+      font-size: 13px;
+    }
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      background: #fff;
+      margin: 14px 0;
+    }
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .step {
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--blue);
+      padding: 12px;
+      border-radius: 8px;
+      background: #fff;
+    }
+    .step b {
+      display: block;
+      margin-bottom: 6px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 22px;
+      font-size: 14px;
+    }
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 9px 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: #f2f5f9;
+      font-weight: 700;
+    }
+    .bar {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      white-space: nowrap;
+    }
+    .bar i {
+      display: inline-block;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--blue);
+      min-width: 8px;
+    }
+    .tag {
+      display: inline-block;
+      border: 1px solid var(--line);
+      background: #f8fafc;
+      padding: 3px 7px;
+      border-radius: 999px;
+      margin: 3px 4px 3px 0;
+      font-size: 12px;
+      color: #2d333b;
+    }
+    .bucket-a { border-left: 4px solid var(--blue); }
+    .bucket-b { border-left: 4px solid var(--teal); }
+    .bucket-c { border-left: 4px solid var(--orange); }
+    .bucket-d { border-left: 4px solid var(--muted); }
+    .note {
+      background: #fff8e6;
+      border: 1px solid #f1d28b;
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin: 14px 0;
+    }
+    .warn {
+      background: #fff5f5;
+      border: 1px solid #efb8b8;
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin: 14px 0;
+    }
+    .links {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .links a {
+      display: block;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 12px;
+      background: #fff;
+    }
+    ul { padding-left: 20px; }
+    li { margin: 5px 0; }
+    @media (max-width: 900px) {
+      .grid, .flow, .links { grid-template-columns: 1fr; }
+      .wrap { padding: 22px 18px; }
+      table { font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>CVPR 2026 3D Reconstruction 분석 방법과 결과</h1>
+      <p class="muted">VGGT 검색에서 출발하되, CVPR 2026 전체 explorer 데이터에서 3D reconstruction 동향을 구조적으로 뽑기 위한 자료 처리 문서.</p>
+      <div class="grid">
+        <div class="metric"><strong>4,070</strong><span>explorer 전체 논문 수</span></div>
+        <div class="metric"><strong>1,417</strong><span>broad 후보 논문</span></div>
+        <div class="metric"><strong>864</strong><span>strict 분석 후보</span></div>
+        <div class="metric"><strong>178</strong><span>블로그 1차 정독 seed</span></div>
+      </div>
+      <div class="toc">
+        <a href="#goal">목표</a>
+        <a href="#pipeline">처리 파이프라인</a>
+        <a href="#queries">검색어 설계</a>
+        <a href="#classification">분류 기준</a>
+        <a href="#results">결과</a>
+        <a href="#interpretation">해석</a>
+        <a href="#files">산출물</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section id="goal">
+      <h2>1. 목표</h2>
+      <p>
+        단순히 <code>VGGT</code>가 제목이나 초록에 들어간 논문만 모으면 feed-forward visual geometry 주변부는 잡히지만,
+        CVPR 2026의 3D reconstruction 전체 동향은 놓친다. 그래서 이 분석은 <code>VGGT</code>를 하나의 검색어가 아니라
+        <strong>feed-forward geometry로 재편되는 3D reconstruction을 읽는 렌즈</strong>로 사용했다.
+      </p>
+      <div class="note">
+        핵심 thesis: CVPR 2026 3D reconstruction은 VGGT류 feed-forward geometry, Gaussian/radiance representation,
+        pose-calibration-localization reliability, dynamic/4D reconstruction, robotics mapping/world model 쪽으로 나뉘어 움직인다.
+      </div>
+    </section>
+
+    <section id="pipeline">
+      <h2>2. 처리 파이프라인</h2>
+      <p>
+        데이터는 공개 explorer HTML 안의 <code>&lt;script id="app-data" type="application/json"&gt;</code> 블록에서 직접 추출했다.
+        각 논문에 대해 제목, 초록, primary phylum, primary genus, topics를 합친 텍스트를 만들고, 여러 검색어 군을 동시에 적용했다.
+      </p>
+      <div class="flow">
+        <div class="step"><b>1. 데이터 추출</b>explorer HTML에서 embedded JSON 추출. 총 4,070편.</div>
+        <div class="step"><b>2. 검색어 매칭</b>VGGT, Gaussian, reconstruction, pose, 4D, mapping 등 10개 그룹 매칭.</div>
+        <div class="step"><b>3. 자동 태깅</b>input, output, claim type, method family를 abstract 기반으로 태깅.</div>
+        <div class="step"><b>4. 점수화/필터링</b>broad 후보, strict 후보, blog seed list로 단계적 축소.</div>
+        <div class="step"><b>5. 블로그용 해석</b>논문을 나열하지 않고 thesis anchor, bridge, representative로 역할 분류.</div>
+      </div>
+    </section>
+
+    <section id="queries">
+      <h2>3. 검색어 설계</h2>
+      <p>
+        검색어는 단일 키워드가 아니라 서로 겹치는 analytical lens로 구성했다. 한 논문이 여러 그룹에 걸리면,
+        그 논문은 블로그에서 cluster를 연결하는 bridge 후보가 된다.
+      </p>
+      <table>
+        <thead>
+          <tr><th>그룹</th><th>의도</th><th>대표 검색어</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>VGGT / feed-forward geometry</td>
+            <td>VGGT 이후 visual geometry foundation model 흐름 탐지</td>
+            <td><span class="tag">VGGT</span><span class="tag">visual geometry</span><span class="tag">feed-forward reconstruction</span><span class="tag">point map</span><span class="tag">DUSt3R</span><span class="tag">MASt3R</span></td>
+          </tr>
+          <tr>
+            <td>General reconstruction / multiview</td>
+            <td>전통적인 3D reconstruction, SfM/MVS, multi-view 계열 포착</td>
+            <td><span class="tag">3D reconstruction</span><span class="tag">multi-view</span><span class="tag">SfM</span><span class="tag">MVS</span><span class="tag">bundle adjustment</span><span class="tag">registration</span></td>
+          </tr>
+          <tr>
+            <td>Gaussian / radiance field</td>
+            <td>3DGS, NeRF, view synthesis가 map/scene representation으로 확장되는 흐름 탐지</td>
+            <td><span class="tag">Gaussian</span><span class="tag">3DGS</span><span class="tag">splatting</span><span class="tag">radiance field</span><span class="tag">NeRF</span><span class="tag">novel view</span></td>
+          </tr>
+          <tr>
+            <td>Pose / calibration / localization</td>
+            <td>metric system으로 갈 때 남는 pose, calibration, localization 병목 탐지</td>
+            <td><span class="tag">camera pose</span><span class="tag">pose estimation</span><span class="tag">calibration</span><span class="tag">localization</span><span class="tag">SLAM</span></td>
+          </tr>
+          <tr>
+            <td>Dynamic / 4D</td>
+            <td>static reconstruction을 넘어 dynamic scene, streaming, 4D로 가는 흐름 탐지</td>
+            <td><span class="tag">4D</span><span class="tag">dynamic scene</span><span class="tag">deformable</span><span class="tag">temporal</span><span class="tag">streaming 3D</span></td>
+          </tr>
+          <tr>
+            <td>Mapping / autonomous / embodied</td>
+            <td>reconstruction이 visual asset이 아니라 world model이나 map으로 쓰이는 흐름 탐지</td>
+            <td><span class="tag">mapping</span><span class="tag">active mapping</span><span class="tag">autonomous driving</span><span class="tag">BEV</span><span class="tag">world model</span><span class="tag">embodied</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="classification">
+      <h2>4. 분류와 점수화 방식</h2>
+      <h3>4.1 자동 태깅 필드</h3>
+      <table>
+        <thead>
+          <tr><th>필드</th><th>의미</th><th>예시</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>matched_groups</code></td><td>논문이 걸린 검색/해석 클러스터</td><td>vggt_lineage, gaussian_radiance, dynamic_4d</td></tr>
+          <tr><td><code>inputs</code></td><td>논문이 가정하는 입력 regime</td><td>single image, sparse multi-view, video, panorama, LiDAR/driving</td></tr>
+          <tr><td><code>outputs</code></td><td>논문이 만드는 출력 representation</td><td>camera pose, depth, point map, Gaussian map, mesh/surface, occupancy, 4D scene</td></tr>
+          <tr><td><code>claims</code></td><td>논문이 주장하는 기여 유형</td><td>foundation/prior, unified pipeline, efficiency, scale, robustness, dynamic, benchmark/data</td></tr>
+          <tr><td><code>score</code></td><td>검색 그룹 가중치, 3D Vision taxonomy, cross-cluster 정도를 합친 전략 점수</td><td>0-100으로 clipping</td></tr>
+          <tr><td><code>editorial_bucket</code></td><td>블로그에서 사용할 역할</td><td>thesis anchor, bridge, representative, adjacent context</td></tr>
+        </tbody>
+      </table>
+
+      <h3>4.2 3단계 필터</h3>
+      <table>
+        <thead>
+          <tr><th>단계</th><th>결과 수</th><th>목적</th><th>해석</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Broad candidates</td><td>1,417</td><td>최대한 놓치지 않는 감시망</td><td>false-positive가 꽤 있음. trend radar 용도.</td></tr>
+          <tr><td>Strict reading candidates</td><td>864</td><td>3D geometry/reconstruction 중심으로 좁힌 분석 모집단</td><td>블로그 재료 풀. 여전히 전부 읽을 필요는 없음.</td></tr>
+          <tr><td>Blog seed list</td><td>178</td><td>1차 정독 우선순위</td><td>A/B bucket 중심으로 대표 논문을 quota 기반 추출.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="warn">
+        이 분류는 제목/초록 기반 자동 태깅이다. 따라서 최종 블로그에서는 seed list의 abstract를 다시 읽고,
+        실제 contribution이 넓은지, 단순 효율화인지, application wrapping인지 한 번 더 판정해야 한다.
+      </div>
+    </section>
+
+    <section id="results">
+      <h2>5. 결과</h2>
+      <h3>5.1 Strict 후보의 클러스터 분포</h3>
+      <table>
+        <thead>
+          <tr><th>클러스터</th><th>논문 수</th><th>상대 규모</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>General 3D reconstruction / multiview</td><td>592</td><td><span class="bar"><i style="width: 100%"></i>592</span></td></tr>
+          <tr><td>Mesh / surface / implicit / occupancy</td><td>561</td><td><span class="bar"><i style="width: 94.8%"></i>561</span></td></tr>
+          <tr><td>Dataset / benchmark / evaluation</td><td>425</td><td><span class="bar"><i style="width: 71.8%"></i>425</span></td></tr>
+          <tr><td>Gaussian / radiance field / view synthesis</td><td>333</td><td><span class="bar"><i style="width: 56.3%"></i>333</span></td></tr>
+          <tr><td>Dynamic / 4D reconstruction</td><td>271</td><td><span class="bar"><i style="width: 45.8%"></i>271</span></td></tr>
+          <tr><td>Depth / stereo / dense correspondence</td><td>267</td><td><span class="bar"><i style="width: 45.1%"></i>267</span></td></tr>
+          <tr><td>Pose / calibration / localization</td><td>256</td><td><span class="bar"><i style="width: 43.2%"></i>256</span></td></tr>
+          <tr><td>Mapping / autonomous / embodied</td><td>251</td><td><span class="bar"><i style="width: 42.4%"></i>251</span></td></tr>
+          <tr><td>3D generation / editing bridge</td><td>151</td><td><span class="bar"><i style="width: 25.5%"></i>151</span></td></tr>
+          <tr><td>VGGT / feed-forward geometry</td><td>67</td><td><span class="bar"><i style="width: 11.3%"></i>67</span></td></tr>
+        </tbody>
+      </table>
+
+      <h3>5.2 Editorial bucket 분포</h3>
+      <table>
+        <thead>
+          <tr><th>Bucket</th><th>Strict 후보 수</th><th>Seed list 수</th><th>블로그에서의 역할</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>A. thesis anchor: representation shift</td><td>159</td><td>35</td><td>Gaussian/radiance/representation 전환을 설명하는 핵심 근거</td></tr>
+          <tr><td>A. thesis anchor: VGGT/feed-forward geometry</td><td>67</td><td>30</td><td>VGGT 이후 feed-forward geometry 흐름의 중심 근거</td></tr>
+          <tr><td>A. thesis anchor: dynamic/4D recon</td><td>40</td><td>30</td><td>static 3D에서 dynamic/4D로 이동하는 pressure test</td></tr>
+          <tr><td>B. bridge: reconstruction becomes mapping/world model</td><td>33</td><td>25</td><td>robotics/SLAM 관점으로 연결하는 다리</td></tr>
+          <tr><td>B. bridge: representation meets metric pose</td><td>13</td><td>13</td><td>3DGS/representation과 pose/localization reliability의 접점</td></tr>
+          <tr><td>C. cluster representative</td><td>284</td><td>35</td><td>각 섹션의 예시 논문</td></tr>
+          <tr><td>D. adjacent but useful context</td><td>268</td><td>10</td><td>주변부 맥락 또는 false-positive 확인용</td></tr>
+        </tbody>
+      </table>
+
+      <h3>5.3 강한 cross-cluster 신호</h3>
+      <table>
+        <thead>
+          <tr><th>Cross-cluster</th><th>논문 수</th><th>해석</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>General reconstruction + surface/occupancy</td><td>455</td><td>3D reconstruction이 mesh, surface, occupancy 같은 explicit representation과 강하게 엮임.</td></tr>
+          <tr><td>Gaussian/radiance + general reconstruction</td><td>228</td><td>3DGS/NVS가 단순 rendering을 넘어 reconstruction 문제의 중심 표현으로 이동.</td></tr>
+          <tr><td>Dynamic/4D + general reconstruction</td><td>202</td><td>static scene에서 moving scene, temporal consistency, 4D reconstruction으로 확장.</td></tr>
+          <tr><td>General reconstruction + robotics mapping</td><td>141</td><td>visual reconstruction과 map/world model 사이의 연결이 늘어남.</td></tr>
+          <tr><td>General reconstruction + pose/calibration/localization</td><td>126</td><td>real system으로 가는 데 pose와 metric consistency가 병목으로 남아 있음.</td></tr>
+          <tr><td>Dynamic/4D + Gaussian/radiance</td><td>112</td><td>Gaussian 계열이 dynamic scene representation으로 확장되는 흐름.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="examples">
+      <h2>6. Seed list 예시</h2>
+      <div class="panel bucket-a">
+        <h3>A. VGGT / feed-forward geometry</h3>
+        <ul>
+          <li>Dynamic Visual SLAM using a General 3D Prior</li>
+          <li>DynamicVGGT: Learning Dynamic Point Maps for 4D Scene Reconstruction in Autonomous Driving</li>
+          <li>E-RayZer: Self-supervised 3D Reconstruction as Spatial Visual Pre-training</li>
+          <li>FRM: Linear-Time 3D Reconstruction via Test-Time Training</li>
+          <li>OmniVGGT: Omni-Modality Driven Visual Geometry Grounded Transformer</li>
+        </ul>
+      </div>
+      <div class="panel bucket-a">
+        <h3>A. Representation shift</h3>
+        <ul>
+          <li>3D Gaussian Splatting with Self-Constrained Prior for High Fidelity Surface Reconstruction</li>
+          <li>AeroGS: Scale-Aware Gaussian Splatting for Pose-Free Dynamic UAV Scene Reconstruction</li>
+          <li>AnchorSplat: Feed-Forward 3D Gaussian Splatting With 3D Geometric Priors</li>
+          <li>BA-GS: Bayesian Adaptive Gaussian Splatting for SFM-Free 3D Reconstruction</li>
+          <li>Energy-GS: Image Energy-guided Pose Alignment Gaussian Splatting with redesigned pose gradient flow</li>
+        </ul>
+      </div>
+      <div class="panel bucket-a">
+        <h3>A. Dynamic / 4D reconstruction</h3>
+        <ul>
+          <li>4D Primitive-Mache: Glueing Primitives for Persistent 4D Scene Reconstruction</li>
+          <li>CARI4D: Category Agnostic 4D Reconstruction of Human-Object Interaction</li>
+          <li>Catch Me if You Can: Active Mapping of Moving 3D Objects</li>
+          <li>Complet4R: Geometric Complete 4D Reconstruction</li>
+          <li>Revisiting Monocular SLAM with Spatio-Temporal Scene Modeling</li>
+        </ul>
+      </div>
+      <div class="panel bucket-b">
+        <h3>B. Metric pose / mapping bridge</h3>
+        <ul>
+          <li>AERGS-SLAM: Auto-Exposure-Robust Stereo 3D Gaussian Splatting SLAM</li>
+          <li>Flow4DGS-SLAM: Optical Flow-Guided 4D Gaussian Splatting SLAM</li>
+          <li>ODGS-SLAM: Omnidirectional Gaussian Splatting SLAM</li>
+          <li>DROID-SLAM in the Wild</li>
+          <li>Dual-Agent Reinforcement Learning for Adaptive and Cost-Aware Visual-Inertial Odometry</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="interpretation">
+      <h2>7. 해석</h2>
+      <p>
+        결과적으로 <code>VGGT</code>만 보면 67편 규모의 feed-forward geometry 주변 논문을 볼 수 있지만,
+        CVPR 2026의 3D reconstruction 변화는 그보다 넓다. 더 큰 신호는 Gaussian/radiance field가 reconstruction representation으로 확장되고,
+        dynamic/4D reconstruction이 static reconstruction의 다음 평가 축이 되며, pose/calibration/localization이 실제 시스템화를 위한 reliability layer로 남아 있다는 점이다.
+      </p>
+      <p>
+        블로그의 좋은 구조는 논문 리스트가 아니라 field movement를 설명하는 방식이다. 즉 “좋은 논문 몇 개”를 고르는 것이 아니라,
+        어떤 논문이 중심 thesis를 만들고, 어떤 논문이 bridge 역할을 하며, 어떤 논문은 지엽적이지만 남은 병목을 보여주는지 분리해야 한다.
+      </p>
+      <div class="note">
+        추천 결론: 연구 기회는 <strong>VGGT-like feed-forward prior + metric factor graph / online update + uncertainty</strong> 쪽에 있다.
+        CVPR식 feed-forward 3D와 robotics식 SLAM/mapping 사이에는 아직 실질적인 간극이 남아 있다.
+      </div>
+    </section>
+
+    <section id="files">
+      <h2>8. 산출물 링크</h2>
+      <div class="links">
+        <a href="cvpr2026_3d_recon_blog_seed_list.csv">블로그 1차 정독 seed list CSV</a>
+        <a href="cvpr2026_3d_recon_blog_seed_audit.html">Seed list HTML audit</a>
+        <a href="cvpr2026_3d_recon_strict_reading_list.csv">Strict 후보 864편 CSV</a>
+        <a href="cvpr2026_3d_recon_strict_audit.html">Strict 후보 HTML audit</a>
+        <a href="cvpr2026_3d_recon_broad_candidates.csv">Broad 후보 1,417편 CSV</a>
+        <a href="cvpr2026_3d_recon_cluster_summary.csv">클러스터 요약 CSV</a>
+        <a href="cvpr2026_3d_recon_blog_plan_ko.md">한국어 블로그 플랜 Markdown</a>
+        <a href="cvpr2026_3d_recon_strategic_brief.md">전략 브리프 Markdown</a>
+      </div>
+      <p class="muted">
+        생성 스크립트: <code>process_cvpr2026_3d_recon.py</code>. 원본 JSON snapshot은 <code>data/cvpr2026_app_data.json</code>에 저장되어 있다.
+      </p>
+    </section>
+  </main>
+</body>
+</html>
