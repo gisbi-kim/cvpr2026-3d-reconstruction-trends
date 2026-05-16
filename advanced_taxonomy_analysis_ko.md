@@ -181,6 +181,54 @@ Observed Taxonomy
 
 이 taxonomy를 실제 curated set에 적용하면 다음 결론이 나온다. 기준은 864편 strict 후보 중 `core_reconstruction` 362편과 `strong_bridge` 74편, 총 436편이다. 그중 relevance confidence가 high인 논문은 297편이다.
 
+## 더 덜 뻔한 판정: 빈도보다 모순이 중요하다
+
+첫 번째 적용 결과도 여전히 안전한 해석에 가까웠다. 더 높은 수준의 분석은 큰 cluster를 다시 설명하는 것이 아니라, 데이터 안의 모순과 결핍을 읽어야 한다.
+
+### 1. VGGT는 다음 SOTA 주제가 아니라 곧 commodity가 될 가능성이 크다
+
+VGGT lineage는 core/bridge set 안에서 48편이다. 그러나 그 안에는 `FlashVGGT`, `QVGGT`, `HTTM`, `HeSS`, `VGG-T^3`, `Scal3R`처럼 압축, 양자화, token merging, scale-up류 제목이 이미 보인다.
+
+어떤 모델이 벌써 가속, 압축, 재사용 대상이 된다는 것은 novelty frontier가 아니라 infrastructure primitive로 내려가고 있다는 뜻이다. 따라서 "VGGT를 더 잘한다"보다 "VGGT류 prior가 틀릴 때 system이 어떻게 의심하고 보정하는가"가 더 큰 문제다.
+
+### 2. 가장 큰 결핍은 failure language다
+
+core/bridge set에서 `foundation/prior` claim은 210건, `robustness`는 149건이지만, keyword scan 기준 `failure`는 6건, `outlier`는 4건, `abstention`은 0건이다.
+
+field는 3D를 agent infrastructure로 밀고 있지만, "언제 쓰면 안 되는가"의 언어가 거의 없다. 이 빈칸은 단순 robustness보다 큰 trust governance 문제다.
+
+### 3. Generation은 reconstruction의 downstream이 아니라 경쟁 control plane이 될 수 있다
+
+`Gen3R`, `MotionCrafter`, `WorldStereo`, `GaussFusion`, `Pano3DComposer`처럼 generation과 reconstruction이 섞인 논문들이 geometry를 생성 제어의 조건 또는 부산물로 쓴다.
+
+이는 reconstruction이 독립 task로 남는다는 가정이 흔들린다는 뜻이다. 미래에는 geometry가 truth recovery가 아니라 video/world generation을 제어하는 latent handle로 소비될 수 있다.
+
+### 4. Pose-free 흐름은 SLAM의 승리가 아니라 SLAM prerequisite의 해체다
+
+`BA-GS`, `No Calibration, No Depth, No Problem`, `Pose-Free Omnidirectional Gaussian Splatting`, `Learning 3D Representations from Unposed Multi-View Images` 같은 제목들이 반복된다.
+
+CVPR 쪽 압력은 "정확한 pose를 먼저 구하자"가 아니라 "pose/calibration 없이도 그럴듯한 3D를 만들자"다. robotics 쪽 기회는 이를 반박하는 것이 아니라, pose-free output의 epistemic uncertainty와 failure boundary를 정의하는 데 있다.
+
+### 5. Reconstruction은 passive inference에서 acquisition policy로 이동한다
+
+`AREA3D: Active Reconstruction Agent`, `Catch Me if You Can: Active Mapping of Moving 3D Objects`, streaming 4D reconstruction, trajectory-conditioned occupancy world model류 신호가 있다.
+
+다음 질문은 "주어진 이미지에서 3D를 뽑는가"가 아니라 "무엇을 더 봐야 uncertainty가 줄어드는가"다. 즉 reconstruction은 perception problem에서 information-gathering policy problem으로 이동한다.
+
+### 6. Benchmark 논문 증가는 성숙이 아니라 불안정성의 증거다
+
+benchmark/evaluation은 core/bridge에서 195편이고, dynamic과 72편, pose/calibration과 51편 교차한다.
+
+field가 안정되면 benchmark는 배경으로 물러난다. 지금 benchmark가 크게 보인다는 것은 아직 무엇을 잘한다고 불러야 할지 합의가 없다는 뜻이다. 이 시기에는 method보다 evaluation rule을 잡는 쪽이 더 큰 영향력을 가진다.
+
+### 더 강한 결론
+
+따라서 더 강한 결론은 "3D reconstruction이 spatial memory로 간다"가 아니다. 그것은 아직 안전한 문장이다.
+
+더 불편한 결론은 다음이다.
+
+> foundation 3D가 빠르게 commodity가 되는 동안, field는 아직 failure, abstention, acquisition policy의 언어를 갖지 못했다.
+
 ### 1. Geometry prior는 작은 cluster가 아니라 큰 system pressure다
 
 VGGT / feed-forward lineage는 core/bridge set 안에서 48편이다. 숫자만 보면 Gaussian/radiance 250편이나 surface/occupancy 302편보다 작다. 그러나 VGGT류는 독립 주제라기보다 다른 cluster가 끌어다 쓰는 geometry prior로 작동한다.

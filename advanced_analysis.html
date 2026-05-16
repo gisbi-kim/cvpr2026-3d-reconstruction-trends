@@ -210,7 +210,85 @@
         embodied spatial state interface로 수렴하고 있다는 점이다.
       </div>
 
-      <h3>0.1 Observed topic을 latent role로 재해석한 결과</h3>
+      <h3>0.1 더 덜 뻔한 판정: 빈도보다 모순이 중요하다</h3>
+      <table>
+        <thead>
+          <tr><th>Non-obvious claim</th><th>데이터에서 보이는 이상 신호</th><th>왜 중요한가</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>VGGT는 다음 SOTA 주제가 아니라 곧 commodity가 될 가능성이 크다</td>
+            <td>
+              VGGT lineage는 48편이지만, 그 안에 `FlashVGGT`, `QVGGT`, `HTTM`, `HeSS`, `VGG-T^3`, `Scal3R`처럼
+              압축, 양자화, token merging, scale-up류 제목이 이미 보인다.
+            </td>
+            <td>
+              어떤 모델이 벌써 가속/압축/재사용 대상이 된다는 것은 novelty frontier가 아니라 infrastructure primitive로 내려가고 있다는 뜻이다.
+              따라서 "VGGT를 더 잘한다"보다 "VGGT류 prior가 틀릴 때 system이 어떻게 의심하고 보정하는가"가 더 큰 문제다.
+            </td>
+          </tr>
+          <tr>
+            <td>가장 큰 결핍은 failure language다</td>
+            <td>
+              core/bridge set에서 `foundation/prior` claim은 210건, `robustness`는 149건이지만,
+              keyword scan 기준 `failure`는 6건, `outlier`는 4건, `abstention`은 0건이다.
+            </td>
+            <td>
+              field는 3D를 agent infrastructure로 밀고 있지만, "언제 쓰면 안 되는가"의 언어가 거의 없다.
+              이 빈칸은 단순 robustness보다 큰 trust governance 문제다.
+            </td>
+          </tr>
+          <tr>
+            <td>Generation은 reconstruction의 downstream이 아니라 경쟁 control plane이 될 수 있다</td>
+            <td>
+              `Gen3R`, `MotionCrafter`, `WorldStereo`, `GaussFusion`, `Pano3DComposer`처럼 generation과 reconstruction이 섞인 논문들이
+              geometry를 생성 제어의 조건 또는 부산물로 쓴다.
+            </td>
+            <td>
+              reconstruction이 독립 task로 남는다는 가정이 흔들린다. 미래에는 geometry가 truth recovery가 아니라
+              video/world generation을 제어하는 latent handle로 소비될 수 있다.
+            </td>
+          </tr>
+          <tr>
+            <td>Pose-free 흐름은 SLAM의 승리가 아니라 SLAM prerequisite의 해체다</td>
+            <td>
+              `BA-GS`, `No Calibration, No Depth, No Problem`, `Pose-Free Omnidirectional Gaussian Splatting`,
+              `Learning 3D Representations from Unposed Multi-View Images` 같은 제목들이 반복된다.
+            </td>
+            <td>
+              CVPR 쪽 압력은 "정확한 pose를 먼저 구하자"가 아니라 "pose/calibration 없이도 그럴듯한 3D를 만들자"다.
+              robotics 쪽 기회는 이를 반박하는 것이 아니라, pose-free output의 epistemic uncertainty와 failure boundary를 정의하는 데 있다.
+            </td>
+          </tr>
+          <tr>
+            <td>Reconstruction은 passive inference에서 acquisition policy로 이동한다</td>
+            <td>
+              `AREA3D: Active Reconstruction Agent`, `Catch Me if You Can: Active Mapping of Moving 3D Objects`,
+              streaming 4D reconstruction, trajectory-conditioned occupancy world model류 신호가 있다.
+            </td>
+            <td>
+              다음 질문은 "주어진 이미지에서 3D를 뽑는가"가 아니라 "무엇을 더 봐야 uncertainty가 줄어드는가"다.
+              즉 reconstruction은 perception problem에서 information-gathering policy problem으로 이동한다.
+            </td>
+          </tr>
+          <tr>
+            <td>Benchmark 논문 증가는 성숙이 아니라 불안정성의 증거다</td>
+            <td>
+              benchmark/evaluation은 core/bridge에서 195편이고, dynamic과 72편, pose/calibration과 51편 교차한다.
+            </td>
+            <td>
+              field가 안정되면 benchmark는 배경으로 물러난다. 지금 benchmark가 크게 보인다는 것은 아직 무엇을 잘한다고 불러야 할지 합의가 없다는 뜻이다.
+              이 시기에는 method보다 evaluation rule을 잡는 쪽이 더 큰 영향력을 가진다.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="warning">
+        따라서 더 강한 결론은 "3D reconstruction이 spatial memory로 간다"가 아니다. 그것은 아직 안전한 문장이다.
+        더 불편한 결론은 "foundation 3D가 빠르게 commodity가 되는 동안, field는 아직 failure, abstention, acquisition policy의 언어를 갖지 못했다"는 점이다.
+      </div>
+
+      <h3>0.2 Observed topic을 latent role로 재해석한 결과</h3>
       <table>
         <thead>
           <tr><th>Latent role</th><th>Observed evidence in core/bridge set</th><th>실제 판정</th></tr>
@@ -259,7 +337,7 @@
         </tbody>
       </table>
 
-      <h3>0.2 실제로 보이는 unseen trend 5개</h3>
+      <h3>0.3 실제로 보이는 unseen trend 5개</h3>
       <table>
         <thead>
           <tr><th>순위</th><th>Unseen trend</th><th>왜 unseen인가</th><th>다음 연구장</th></tr>
@@ -313,7 +391,7 @@
         </tbody>
       </table>
 
-      <h3>0.3 이 분석이 기존 결론을 어떻게 바꾸는가</h3>
+      <h3>0.4 이 분석이 기존 결론을 어떻게 바꾸는가</h3>
       <table>
         <thead>
           <tr><th>기존 읽기</th><th>Advanced reading</th><th>전략적 결론</th></tr>
