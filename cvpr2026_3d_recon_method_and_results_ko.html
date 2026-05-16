@@ -209,7 +209,7 @@
         <div class="metric"><strong>4,070</strong><span>explorer 전체 논문 수</span></div>
         <div class="metric"><strong>1,417</strong><span>broad 후보 논문</span></div>
         <div class="metric"><strong>864</strong><span>strict 분석 후보</span></div>
-        <div class="metric"><strong>178</strong><span>블로그 1차 정독 seed</span></div>
+        <div class="metric"><strong>436</strong><span>core + strong bridge</span></div>
       </div>
       <div class="toc">
         <a href="#goal">목표</a>
@@ -323,12 +323,13 @@
           <tr><td>Broad candidates</td><td>1,417</td><td>최대한 놓치지 않는 감시망</td><td>false-positive가 꽤 있음. trend radar 용도.</td></tr>
           <tr><td>Strict reading candidates</td><td>864</td><td>3D geometry/reconstruction 중심으로 좁힌 분석 모집단</td><td>블로그 재료 풀. 여전히 전부 읽을 필요는 없음.</td></tr>
           <tr><td>Blog seed list</td><td>178</td><td>1차 정독 우선순위</td><td>A/B bucket 중심으로 대표 논문을 quota 기반 추출.</td></tr>
+          <tr><td>Curated relevance pass</td><td>436</td><td>최종 리포트의 중심 근거</td><td>864 strict 후보를 다시 core reconstruction 362, strong bridge 74, adjacent 223, likely noise 205로 재분류.</td></tr>
         </tbody>
       </table>
 
       <div class="warn">
-        이 분류는 제목/초록 기반 자동 태깅이다. 따라서 최종 블로그에서는 seed list의 abstract를 다시 읽고,
-        실제 contribution이 넓은지, 단순 효율화인지, application wrapping인지 한 번 더 판정해야 한다.
+        864편 strict 후보는 진짜 reconstruction 논문 수가 아니라 recall-heavy screening pool이다.
+        최종 동향 결론은 추가 relevance pass에서 남긴 core reconstruction 362편과 strong bridge 74편, 특히 high-confidence core/bridge 297편을 중심 근거로 사용한다.
       </div>
     </section>
 
@@ -451,6 +452,8 @@
       <div class="links">
         <a href="cvpr2026_3d_recon_blog_seed_list.csv">블로그 1차 정독 seed list CSV</a>
         <a href="cvpr2026_3d_recon_blog_seed_audit.html">Seed list HTML audit</a>
+        <a href="cvpr2026_3d_recon_curated_relevance.csv">Curated relevance CSV</a>
+        <a href="cvpr2026_3d_recon_curated_relevance_audit.html">Curated relevance HTML audit</a>
         <a href="cvpr2026_3d_recon_strict_reading_list.csv">Strict 후보 864편 CSV</a>
         <a href="cvpr2026_3d_recon_strict_audit.html">Strict 후보 HTML audit</a>
         <a href="cvpr2026_3d_recon_broad_candidates.csv">Broad 후보 1,417편 CSV</a>

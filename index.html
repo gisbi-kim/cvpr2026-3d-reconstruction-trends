@@ -233,7 +233,7 @@
   <header>
     <div class="wrap">
       <h1>CVPR 2026 3D Reconstruction 동향 결론과 연구 제언</h1>
-      <p class="muted">CVPR 2026 explorer 4,070편에서 3D reconstruction 관련 후보를 추출한 뒤, strict 후보 864편과 seed list 178편을 바탕으로 도출한 전략적 결론.</p>
+      <p class="muted">CVPR 2026 explorer 4,070편에서 3D reconstruction 관련 후보를 넓게 추출한 뒤, 864편 strict 후보를 다시 relevance-curated pass로 재분류해 도출한 전략적 결론.</p>
       <div class="thesis">
         결론: 2026년 3D reconstruction의 중심은 “정확한 3D를 복원하는 기술”에서 “동작 가능한 spatial substrate를 만드는 기술”로 이동하고 있다.
         VGGT류 feed-forward geometry, Gaussian map, dynamic 4D, pose/localization reliability, embodied world model이 하나의 전장으로 합쳐지는 중이다.
@@ -242,10 +242,10 @@
         <a class="source-button" href="https://gisbi-kim.github.io/cvpr2026-explorer" target="_blank" rel="noopener">참고한 CVPR 2026 Explorer 열기</a>
       </div>
       <div class="grid">
-        <div class="metric"><strong>864</strong><span>strict 3D recon 후보</span></div>
-        <div class="metric"><strong>333</strong><span>Gaussian / radiance 후보</span></div>
-        <div class="metric"><strong>271</strong><span>dynamic / 4D 후보</span></div>
-        <div class="metric"><strong>256</strong><span>pose / calibration / localization 후보</span></div>
+        <div class="metric"><strong>864</strong><span>screened strict 후보</span></div>
+        <div class="metric"><strong>362</strong><span>core reconstruction</span></div>
+        <div class="metric"><strong>74</strong><span>strong bridge</span></div>
+        <div class="metric"><strong>297</strong><span>high-confidence core/bridge</span></div>
       </div>
       <div class="toc">
         <a href="#one-line">한 줄 결론</a>
@@ -300,9 +300,14 @@
 
     <section id="diagnosis-2026">
       <h2>3. 2026년의 진단</h2>
+      <div class="warning">
+        정량 수치는 한 번 정정했다. 초기의 864편은 “진짜 reconstruction 논문 수”가 아니라 넓게 긁은 strict screening pool이었다.
+        추가 relevance pass에서 864편은 core reconstruction 362편, strong bridge 74편, adjacent context 223편, likely keyword noise 205편으로 나뉘었다.
+        따라서 아래 진단은 주로 core + strong bridge 436편, 그중 high-confidence 297편을 중심 근거로 읽어야 한다.
+      </div>
       <h3>3.1 VGGT는 현상명이 아니라 증상이다</h3>
       <p>
-        데이터상 VGGT/feed-forward geometry 후보는 67편으로 잡혔다. 숫자만 보면 Gaussian이나 general reconstruction보다 작지만,
+        relevance-curated pass에서 core + strong bridge 안의 VGGT/feed-forward geometry 신호는 48편으로 남았다. 숫자만 보면 Gaussian이나 general reconstruction보다 작지만,
         의미는 크다. VGGT류 논문은 “기하 추론을 최적화 루프에서 foundation prior 기반 추론으로 옮기려는 시도”를 보여준다.
       </p>
       <p>
@@ -312,7 +317,7 @@
 
       <h3>3.2 3DGS는 rendering 기술에서 map representation으로 넘어간다</h3>
       <p>
-        strict 후보에서 Gaussian/radiance/view synthesis 계열은 333편으로 잡혔고, general reconstruction과의 교차가 228편이다.
+        core + strong bridge 기준으로 Gaussian/radiance/view synthesis 신호는 250편, general reconstruction 신호는 338편으로 남았다.
         이는 3DGS가 더 이상 novel view synthesis용 표현에 머물지 않고, reconstruction, surface, dynamic scene, pose-free setup, SLAM-like mapping으로 확장되고 있음을 뜻한다.
       </p>
       <div class="claim">
@@ -321,7 +326,7 @@
 
       <h3>3.3 Dynamic / 4D가 진짜 난도 테스트다</h3>
       <p>
-        Dynamic/4D 후보는 271편이고, general reconstruction과의 교차가 202편이다. 이 수치는 2026년 3D recon이 static scene 복원에서
+        core + strong bridge 기준 dynamic/4D 신호는 138편이다. 이 수치는 2026년 3D recon이 static scene 복원에서
         moving object, long sequence, temporal consistency, deformable scene, streaming update로 넘어가고 있음을 보여준다.
       </p>
       <p>
@@ -331,7 +336,7 @@
 
       <h3>3.4 남은 병목은 metric reliability다</h3>
       <p>
-        pose/calibration/localization 후보는 256편이고, general reconstruction과의 교차도 126편이다. Feed-forward 3D가 강해져도
+        core + strong bridge 기준 pose/calibration/localization 신호는 108편이다. Feed-forward 3D가 강해져도
         실제 시스템에서는 scale, pose, calibration, temporal drift, uncertainty, loop consistency 문제가 남는다.
       </p>
       <div class="warning">
@@ -591,6 +596,7 @@
       <p class="muted">
         관련 산출물:
         <a href="cvpr2026_3d_recon_method_and_results_ko.html">방법과 결과 문서</a>,
+        <a href="cvpr2026_3d_recon_curated_relevance_audit.html">curated relevance audit</a>,
         <a href="cvpr2026_3d_recon_blog_seed_list.csv">seed list CSV</a>,
         <a href="cvpr2026_3d_recon_blog_seed_audit.html">seed list HTML audit</a>,
         <a href="cvpr2026_3d_recon_materials.xlsx">Excel workbook</a>.

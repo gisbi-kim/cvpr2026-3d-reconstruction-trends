@@ -108,11 +108,13 @@ async function main() {
   const strictCsv = await readText("cvpr2026_3d_recon_strict_reading_list.csv");
   const broadCsv = await readText("cvpr2026_3d_recon_broad_candidates.csv");
   const summaryCsv = await readText("cvpr2026_3d_recon_cluster_summary.csv");
+  const curatedCsv = await readText("cvpr2026_3d_recon_curated_relevance.csv");
 
   const seedRows = parseCsv(seedCsv);
   const strictRows = parseCsv(strictCsv);
   const broadRows = parseCsv(broadCsv);
   const summaryRows = parseCsv(summaryCsv);
+  const curatedRows = parseCsv(curatedCsv);
 
   const workbook = Workbook.create();
   const summary = workbook.worksheets.add("Summary");
@@ -126,6 +128,7 @@ async function main() {
     ["Explorer papers parsed", 4070],
     ["Broad candidates", broadRows.length - 1],
     ["Strict reading candidates", strictRows.length - 1],
+    ["Core + strong bridge", 436],
     ["Blog seed papers", seedRows.length - 1],
   ];
   summary.getRange("A3:B3").format.fill = { color: "#235789" };
@@ -142,9 +145,11 @@ async function main() {
   clusterChart.setPosition("G3", "N18");
 
   const bucketCounts = countRowsBy(seedRows, "editorial_bucket");
-  writeBlock(summary, "A10", [["Seed editorial bucket", "Count"], ...bucketCounts], true);
-  const bucketChart = summary.charts.add("bar", summary.getRange(`A10:B${bucketCounts.length + 10}`));
-  bucketChart.title = "Blog Seed Papers by Editorial Bucket";
+  const relevanceCounts = countRowsBy(curatedRows, "relevance_tier");
+  writeBlock(summary, "A10", [["Curated relevance tier", "Count"], ...relevanceCounts], true);
+  writeBlock(summary, "A17", [["Seed editorial bucket", "Count"], ...bucketCounts], true);
+  const bucketChart = summary.charts.add("bar", summary.getRange(`A10:B${relevanceCounts.length + 10}`));
+  bucketChart.title = "Curated Relevance Tiers";
   bucketChart.hasLegend = false;
   bucketChart.xAxis = { axisType: "textAxis" };
   bucketChart.setPosition("G20", "N34");
@@ -164,11 +169,12 @@ async function main() {
   summary.getRange("D20:F35").format.rowHeightPx = 34;
 
   writeSheetFromRows(workbook, "SeedList", seedRows);
+  writeSheetFromRows(workbook, "CuratedRelevance", curatedRows);
   writeSheetFromRows(workbook, "StrictReadingList", strictRows);
   writeSheetFromRows(workbook, "BroadCandidates", broadRows);
   writeSheetFromRows(workbook, "ClusterSummary", summaryRows);
 
-  for (const name of ["SeedList", "StrictReadingList", "BroadCandidates", "ClusterSummary"]) {
+  for (const name of ["SeedList", "CuratedRelevance", "StrictReadingList", "BroadCandidates", "ClusterSummary"]) {
     const sheet = workbook.worksheets.getItem(name);
     styleUsed(sheet);
     sheet.getRange("A:A").format.columnWidthPx = 46;
