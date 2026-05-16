@@ -185,6 +185,7 @@
         아직 논문화되지 않았지만 여러 클러스터가 동시에 압력을 가하고 있는 문제가 다음 연구장을 만든다.
       </div>
       <div class="toc">
+        <a href="#executed-analysis">실제 적용 결과</a>
         <a href="#why">왜 taxonomy를 고쳐야 하는가</a>
         <a href="#layers">새 5층 taxonomy</a>
         <a href="#field-shift">Latent Field Shift</a>
@@ -196,6 +197,152 @@
   </header>
 
   <main class="wrap">
+    <section id="executed-analysis">
+      <h2>0. 실제 적용 결과: 436편 core/bridge를 다시 읽으면 무엇이 보이는가</h2>
+      <p>
+        이 페이지의 advanced taxonomy를 실제 CVPR 2026 3D reconstruction curated set에 적용했다.
+        기준은 864편 strict 후보 중 `core_reconstruction` 362편과 `strong_bridge` 74편, 총 436편이다.
+        그중 relevance confidence가 high인 논문은 297편이다.
+      </p>
+      <div class="claim">
+        적용 결과의 핵심 판정: CVPR 2026 3D reconstruction의 unseen trend는 "3DGS가 많다" 또는 "VGGT가 뜬다"가 아니다.
+        진짜 신호는 learned geometry prior, map-like representation, dynamic world update, metric trust gate가 하나의
+        embodied spatial state interface로 수렴하고 있다는 점이다.
+      </div>
+
+      <h3>0.1 Observed topic을 latent role로 재해석한 결과</h3>
+      <table>
+        <thead>
+          <tr><th>Latent role</th><th>Observed evidence in core/bridge set</th><th>실제 판정</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Geometry Prior</td>
+            <td>VGGT / feed-forward lineage 48편. high-confidence thesis anchor 안에서는 46편이 VGGT/feed-forward 축으로 남음.</td>
+            <td>
+              숫자는 작지만 field leverage는 크다. VGGT류는 독립 category라기보다 다른 cluster가 끌어다 쓰는 geometry prior다.
+              특히 pose/localization 21편, dynamic/4D 17편, robotics/mapping 11편과 교차한다.
+            </td>
+          </tr>
+          <tr>
+            <td>Renderable Spatial State</td>
+            <td>Gaussian / radiance / view synthesis 250편, surface / occupancy 302편, 두 축의 교차 143편.</td>
+            <td>
+              3DGS는 rendering topic을 넘어서 map representation 후보가 됐다.
+              다만 action semantics, freespace, collision, uncertainty가 붙지 않으면 rendering codec에 머문다.
+            </td>
+          </tr>
+          <tr>
+            <td>Persistent World Memory</td>
+            <td>Dynamic / 4D 138편. dynamic + Gaussian 80편, dynamic + robotics/mapping 49편, dynamic + benchmark 72편.</td>
+            <td>
+              static reconstruction 다음 문제는 temporal persistence다.
+              4D는 단순 motion modeling이 아니라 무엇을 기억하고, 지우고, 재관측 때 갱신할지의 memory 문제로 읽어야 한다.
+            </td>
+          </tr>
+          <tr>
+            <td>Trust Boundary</td>
+            <td>Pose / calibration / localization 108편. pose + robotics/mapping 38편, pose + benchmark 51편.</td>
+            <td>
+              metric reliability는 부가 metric이 아니라 embodied deployment의 trust boundary다.
+              learned 3D가 agent decision으로 들어가려면 uncertainty, calibration, relocalization, failure rejection이 필수다.
+            </td>
+          </tr>
+          <tr>
+            <td>Evaluation Standard</td>
+            <td>Dataset / benchmark / evaluation 195편. benchmark + dynamic 72편, benchmark + pose 51편.</td>
+            <td>
+              benchmark cluster는 주변부가 아니다. 다음 field rule을 정하는 축이다.
+              PSNR/Chamfer 중심 평가가 closed-loop reliability 평가로 바뀌는지가 가장 중요한 관전 포인트다.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>0.2 실제로 보이는 unseen trend 5개</h3>
+      <table>
+        <thead>
+          <tr><th>순위</th><th>Unseen trend</th><th>왜 unseen인가</th><th>다음 연구장</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Prior-state interface가 새 전장이다</td>
+            <td>
+              VGGT류 prior 자체는 48편으로 크지 않다. 그러나 pose, dynamic, robotics, Gaussian occupancy 쪽으로 침투한다.
+              즉 별도 cluster가 아니라 여러 cluster의 backend를 바꾸는 압력이다.
+            </td>
+            <td>Feed-forward 3D prior를 uncertain measurement로 받아들이는 SLAM/backend.</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>3DGS는 map이 되라는 압력을 받고 있다</td>
+            <td>
+              Gaussian 250편 중 surface/occupancy와 겹치는 신호가 강하고, robotics/mapping과도 54편 교차한다.
+              이는 visual representation이 action state로 확장되는 중이라는 뜻이다.
+            </td>
+            <td>Gaussian + occupancy + scene graph + uncertainty를 묶은 embodied map.</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Dynamic 4D는 novelty topic이 아니라 static-map assumption의 붕괴다</td>
+            <td>
+              dynamic/4D가 Gaussian, benchmark, robotics와 동시에 겹친다.
+              따라서 단순 temporal reconstruction이 아니라 map persistence의 실패 조건을 드러낸다.
+            </td>
+            <td>Object-centric 4D memory, update/forgetting policy, dynamic relocalization.</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Evaluation 권력이 visual quality에서 decision reliability로 이동한다</td>
+            <td>
+              benchmark cluster가 dynamic, pose, robotics와 연결되어 있다.
+              이는 "보기 좋은 reconstruction"만으로는 다음 system claim을 만들기 어렵다는 신호다.
+            </td>
+            <td>failure prediction, abstention, recovery, closed-loop task success benchmark.</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>Spatial memory가 reconstruction의 상위 문제로 떠오른다</td>
+            <td>
+              world model, dynamic 4D, embodied mapping, Gaussian occupancy가 서로 다른 이름으로 같은 빈칸을 밀고 있다.
+              그 빈칸은 persistent, updateable, queryable spatial state다.
+            </td>
+            <td>Embodied foundation model을 위한 reliability-aware spatial memory stack.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>0.3 이 분석이 기존 결론을 어떻게 바꾸는가</h3>
+      <table>
+        <thead>
+          <tr><th>기존 읽기</th><th>Advanced reading</th><th>전략적 결론</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>VGGT/feed-forward 3D가 뜬다</td>
+            <td>Geometry prior가 state estimator 안으로 들어오고 있다</td>
+            <td>VGGT를 따라가는 연구보다 prior-state interface를 정의하는 연구가 더 강하다.</td>
+          </tr>
+          <tr>
+            <td>3DGS 논문이 많다</td>
+            <td>Renderable representation이 map substrate 자리를 노린다</td>
+            <td>3DGS 단독 개선보다 actionability와 trust를 붙인 hybrid map이 오래간다.</td>
+          </tr>
+          <tr>
+            <td>Dynamic/4D가 성장한다</td>
+            <td>Static map assumption이 깨지는 pressure test다</td>
+            <td>dynamic object를 outlier가 아니라 memory entity로 다뤄야 한다.</td>
+          </tr>
+          <tr>
+            <td>Benchmark/evaluation 논문이 많다</td>
+            <td>다음 field rule을 정하는 권력 경쟁이다</td>
+            <td>새 metric을 제안하는 논문이 새 method보다 더 큰 영향력을 가질 수 있다.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
     <section id="why">
       <h2>1. 왜 taxonomy를 고쳐야 하는가</h2>
       <p>
@@ -364,13 +511,13 @@
     </section>
 
     <section id="actions">
-      <h2>6. 실행계획</h2>
+      <h2>6. 실행계획과 완료된 반영</h2>
       <ol>
-        <li>기존 분석의 method taxonomy를 `Observed Topic Taxonomy`로 명명하고 그대로 보존한다.</li>
-        <li>각 observed topic에 `Functional Role`, `Hidden Pressure`, `Strategic Bet` 태그를 추가한다.</li>
-        <li>`Negative Space` 섹션을 만들어 아직 benchmark화되지 않은 결핍을 정리한다.</li>
-        <li>연구 제안은 `Reliability-Aware Spatial Memory for Embodied Foundation Models`라는 하나의 flagship agenda로 묶는다.</li>
-        <li>기존 메인 페이지에서는 `Core Analysis`, `Advanced Analysis`, `Methods / Results` 탭으로 페이지 간 이동을 만든다.</li>
+        <li>기존 분석의 method taxonomy를 `Observed Topic Taxonomy`로 보존했다.</li>
+        <li>436편 core/bridge set을 `Functional Role`, `Hidden Pressure`, `Strategic Bet` 기준으로 재해석했다.</li>
+        <li>`Negative Space` 섹션을 만들어 아직 benchmark화되지 않은 결핍을 정리했다.</li>
+        <li>연구 제안을 `Reliability-Aware Spatial Memory for Embodied Foundation Models`라는 하나의 flagship agenda로 묶었다.</li>
+        <li>기존 메인 페이지에서 `Core Analysis`, `Advanced Analysis`, `Methods / Results` 탭으로 페이지 간 이동을 만들었다.</li>
       </ol>
       <p class="muted">
         Markdown 기록:

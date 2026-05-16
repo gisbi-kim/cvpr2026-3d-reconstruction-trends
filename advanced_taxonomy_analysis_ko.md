@@ -176,3 +176,51 @@ Observed Taxonomy
 ```
 
 이 구조를 쓰면 분석은 "많이 나온 주제 정리"에서 "아직 이름 붙지 않은 다음 연구장"을 읽는 분석으로 올라간다. 이것이 unseen trend를 읽는 taxonomy다.
+
+## 실제 적용 결과: CVPR 2026 3D Reconstruction
+
+이 taxonomy를 실제 curated set에 적용하면 다음 결론이 나온다. 기준은 864편 strict 후보 중 `core_reconstruction` 362편과 `strong_bridge` 74편, 총 436편이다. 그중 relevance confidence가 high인 논문은 297편이다.
+
+### 1. Geometry prior는 작은 cluster가 아니라 큰 system pressure다
+
+VGGT / feed-forward lineage는 core/bridge set 안에서 48편이다. 숫자만 보면 Gaussian/radiance 250편이나 surface/occupancy 302편보다 작다. 그러나 VGGT류는 독립 주제라기보다 다른 cluster가 끌어다 쓰는 geometry prior로 작동한다.
+
+실제 교차 신호:
+
+- VGGT + pose/calibration/localization: 21편
+- VGGT + dynamic/4D: 17편
+- VGGT + robotics/mapping: 11편
+
+따라서 결론은 "VGGT 논문이 많다"가 아니다. 더 정확한 결론은 feed-forward geometry prior가 SLAM, dynamic reconstruction, occupancy, embodied mapping의 measurement source로 들어오기 시작했다는 것이다.
+
+### 2. 3DGS는 rendering representation에서 map substrate 후보로 이동한다
+
+core/bridge set에서 Gaussian/radiance/view synthesis는 250편, surface/occupancy는 302편이며 두 축의 교차는 143편이다. Gaussian + robotics/mapping도 54편이다.
+
+이 신호는 3DGS가 단순 novel view synthesis 표현에서 map-like representation으로 압박받고 있음을 뜻한다. 하지만 3DGS가 action 가능한 map이 되려면 freespace, collision, traversability, affordance, uncertainty, persistence가 붙어야 한다.
+
+### 3. Dynamic 4D는 novelty topic이 아니라 static-map assumption의 붕괴다
+
+Dynamic/4D는 core/bridge set에서 138편이다. dynamic + Gaussian은 80편, dynamic + robotics/mapping은 49편, dynamic + benchmark/evaluation은 72편이다.
+
+따라서 dynamic 4D는 단순히 움직이는 장면을 복원하는 topic이 아니다. static map assumption이 깨지는 지점이며, persistent world memory, object identity, update/forgetting, relocalization recovery를 요구하는 pressure test다.
+
+### 4. Evaluation은 주변부가 아니라 field rule-setting이다
+
+Dataset / benchmark / evaluation은 core/bridge set에서 195편이다. benchmark + dynamic은 72편, benchmark + pose/calibration/localization은 51편이다.
+
+이는 다음 field의 권력이 method가 아니라 evaluation standard에서 생길 수 있음을 뜻한다. PSNR, LPIPS, Chamfer 중심의 visual fidelity 평가는 embodied spatial intelligence를 충분히 설명하지 못한다. 다음 표준은 failure prediction, abstention, re-localization, dynamic recovery, closed-loop task success 쪽으로 이동해야 한다.
+
+### 5. 최종 판정
+
+CVPR 2026 3D reconstruction의 unseen trend는 `3DGS가 많다` 또는 `VGGT가 뜬다`가 아니다.
+
+더 높은 수준의 판정은 다음이다.
+
+> learned geometry prior, map-like representation, dynamic world update, metric trust gate가 하나의 embodied spatial state interface로 수렴하고 있다.
+
+따라서 가장 강한 연구 agenda는 다음으로 잡는 것이 맞다.
+
+> Reliability-Aware Spatial Memory for Embodied Foundation Models
+
+하위 축은 `Prior as Measurement`, `Map as Memory`, `Evaluation as Trust`다.
