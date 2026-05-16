@@ -186,6 +186,7 @@
       </div>
       <div class="toc">
         <a href="#executed-analysis">실제 적용 결과</a>
+        <a href="#strategic-theses">Three Strategic Theses</a>
         <a href="#why">왜 taxonomy를 고쳐야 하는가</a>
         <a href="#layers">새 5층 taxonomy</a>
         <a href="#field-shift">Latent Field Shift</a>
@@ -419,6 +420,201 @@
           </tr>
         </tbody>
       </table>
+    </section>
+
+    <section id="strategic-theses">
+      <h2>1. Three Strategic Theses: taxonomy를 넘어선 field memo</h2>
+      <div class="warning">
+        아래 세 thesis는 기존 taxonomy를 더 정교하게 만드는 목적이 아니다. 오히려 taxonomy가 가리는 것을 드러내기 위한 내부 전략 메모다.
+        핵심 질문은 "무슨 주제가 많은가"가 아니라, "3D reconstruction이라는 이름 아래 실제로 어떤 권력과 책임 경계가 재편되는가"다.
+      </div>
+
+      <h3>Thesis 1. 3D Reconstruction은 사라지고, World-State Compiler가 된다</h3>
+      <p>
+        지금 3D reconstruction을 여전히 "이미지나 비디오로부터 3D 구조를 복원하는 문제"로 보면 중요한 전환을 놓친다.
+        CVPR 2026의 신호는 더 이상 reconstruction이 하나의 task로 커지고 있다는 것이 아니다.
+        오히려 reconstruction이라는 이름의 독립성은 약해지고 있다.
+        3D reconstruction은 점점 더 큰 system 안에서 <strong>world state를 컴파일하는 중간 계층</strong>으로 흡수되고 있다.
+      </p>
+      <p>
+        여기서 world-state compiler란 raw sensor input, learned visual prior, temporal observation, language instruction,
+        action context를 받아서 agent가 사용할 수 있는 state representation으로 변환하는 계층을 뜻한다.
+        이 state는 단순 mesh도 아니고, Gaussian도 아니고, point cloud도 아니다.
+        그것들은 compiler가 생산하거나 사용하는 중간 표현일 뿐이다.
+        핵심 output은 "agent가 지금 세계를 어떻게 믿고 있는가"다.
+      </p>
+      <p>
+        이 관점에서 보면 VGGT, DUSt3R, MASt3R류 feed-forward geometry model은 최종 답이 아니다.
+        그것들은 compiler의 front-end prior가 된다.
+        3DGS는 최종 map이 아니다.
+        그것은 compiler가 appearance, visibility, editable scene representation을 유지하기 위해 사용하는 renderable memory format이다.
+        Dynamic 4D reconstruction은 별도 분야가 아니다.
+        그것은 compiler가 시간이 흐를 때 state를 어떻게 update하고 invalidate하는지 묻는 문제다.
+        Pose-free reconstruction도 마찬가지다.
+        그것은 pose estimation이 사라졌다는 뜻이 아니라, compiler가 pose를 explicit prerequisite로 요구하지 않는 방향으로 변하고 있다는 뜻이다.
+      </p>
+      <div class="claim">
+        따라서 앞으로의 핵심 질문은 "어떤 representation이 더 좋은가"가 아니다.
+        더 중요한 질문은 어떤 system이 heterogeneous observation을 받아서, action 가능한 world state로 안정적으로 컴파일할 수 있는가이다.
+      </div>
+      <p>
+        이 질문은 기존 reconstruction benchmark의 언어로는 충분히 평가되지 않는다.
+        PSNR, LPIPS, Chamfer, depth error는 compiler의 일부 품질만 측정한다.
+        그러나 agent 입장에서는 더 중요한 것이 있다.
+        이 state가 오래 유지되는가? 틀렸을 때 invalidate되는가? 새 관측이 들어왔을 때 갱신되는가?
+        움직이는 object가 사라졌다가 다시 나타났을 때 같은 entity로 추적되는가?
+        language query가 들어왔을 때 geometric belief와 semantic belief가 충돌하면 어떤 쪽을 믿는가?
+        action 실패 후 state를 수정하는가?
+      </p>
+      <p>
+        여기서 3D reconstruction의 미래는 "더 좋은 3D 생성"이 아니라 <strong>state compilation architecture</strong>가 된다.
+        좋은 연구는 single method 성능을 높이는 것이 아니라, input, prior, representation, uncertainty, memory,
+        action feedback 사이의 interface를 정의한다.
+        즉, 2027년 이후 강한 연구는 `VGGT + SLAM`, `3DGS + occupancy`, `4D + world model` 같은 조합 자체가 아니라,
+        그 조합을 가능하게 하는 compiler contract를 제안해야 한다.
+      </p>
+      <p>
+        이 thesis의 불편한 함의는 명확하다.
+        3D reconstruction 연구자는 더 이상 "복원 품질"만으로 field를 주도하기 어렵다.
+        field의 주도권은 world state를 정의하는 쪽으로 이동한다.
+        이것은 SLAM, embodied AI, video generation, simulation, robotics evaluation이 모두 걸린 문제다.
+        누가 world-state compiler의 표준 interface를 잡는가가 다음 권력의 핵심이다.
+      </p>
+
+      <h3>Thesis 2. SLAM은 대체되지 않는다. 대신 Trust Kernel로 축소된다</h3>
+      <p>
+        CVPR식 3D foundation model이 강해질수록 "SLAM이 대체되는가?"라는 질문이 반복된다.
+        이 질문은 반쯤 맞고 반쯤 틀렸다.
+        classical SLAM pipeline의 많은 부분은 분명 약해진다.
+        feature matching, dense correspondence, pose initialization, sparse-to-dense reconstruction 같은 모듈은
+        feed-forward model에 의해 압박받는다.
+        그러나 SLAM이 사라진다는 결론은 너무 단순하다.
+      </p>
+      <div class="claim">
+        더 정확한 변화는 SLAM이 full-stack reconstruction pipeline에서 learned world state를 검증하고 보정하는 trust kernel로 축소된다는 것이다.
+      </div>
+      <p>
+        Trust kernel이란 system이 어떤 3D state를 믿어도 되는지 판단하는 최소 핵심 계층이다.
+        이 계층은 반드시 모든 geometry를 처음부터 만들 필요가 없다.
+        오히려 geometry prior는 VGGT류 model이 줄 수 있다.
+        appearance-rich representation은 3DGS가 줄 수 있다.
+        semantic cue는 VLM이 줄 수 있다.
+        하지만 이 모든 것이 agent의 action으로 들어가기 전에, 누군가는 다음 질문에 답해야 한다.
+      </p>
+      <p>
+        이 pose는 metric하게 일관적인가?
+        이 depth는 scale drift가 없는가?
+        이 object는 실제로 움직인 것인가, 아니면 model hallucination인가?
+        이 map update는 이전 belief와 충돌하지 않는가?
+        이 visual prior가 자신 있게 틀린 경우를 어떻게 잡을 것인가?
+        새 관측이 기존 map을 깨뜨릴 때, state를 고칠 것인가, 관측을 버릴 것인가, 추가 관측을 요구할 것인가?
+      </p>
+      <p>
+        이 질문들은 classic SLAM이 잘하던 영역과 맞닿아 있다.
+        다만 역할이 바뀐다.
+        과거 SLAM은 world state를 생성하는 주체였다.
+        미래 SLAM은 learned prior가 생성한 world state를 검증하고, 보정하고, 실패를 선언하는 kernel이 된다.
+        즉 SLAM은 커다란 pipeline에서 작은 module로 줄어드는 대신, 더 critical한 책임을 갖는다.
+      </p>
+      <p>
+        이 변화는 robotics 연구자에게 양면적이다.
+        나쁜 전략은 "foundation model이 틀리니 classical SLAM이 여전히 중요하다"고 방어적으로 말하는 것이다.
+        그건 설득력이 약하다.
+        좋은 전략은 "foundation 3D가 agent stack에 들어갈수록, trust kernel 없이는 deploy될 수 없다"고 공격적으로 말하는 것이다.
+        즉 SLAM의 가치를 legacy로 방어하지 말고, liability layer로 재정의해야 한다.
+      </p>
+      <p>
+        여기서 중요한 키워드는 accuracy가 아니라 <strong>liability</strong>다.
+        agent가 잘못된 3D state를 믿고 collision을 일으키거나, manipulation을 실패하거나,
+        잘못된 navigation decision을 내렸을 때 책임은 누구에게 있는가?
+        VGGT prior인가? Gaussian map인가? VLM instruction parser인가? Planner인가?
+        이 책임 경계를 기술적으로 정의하는 계층이 trust kernel이다.
+      </p>
+      <p>
+        따라서 다음 세대 SLAM 연구의 핵심은 "더 좋은 trajectory estimation"만이 아니다.
+        더 중요한 문제는 learned prior와 metric consistency 사이의 arbitration이다.
+        feed-forward model이 그럴듯한 depth를 주지만 loop consistency가 깨질 때 어떻게 할 것인가?
+        dynamic object를 prior가 static structure로 hallucinate할 때 어떻게 reject할 것인가?
+        pose-free reconstruction이 멋진 결과를 내지만 metric scale이 불안정할 때 system은 어느 수준에서 멈춰야 하는가?
+      </p>
+      <p>
+        이 thesis의 결론은 강하다.
+        SLAM은 대체되지 않는다.
+        하지만 예전 형태로 살아남지도 않는다.
+        SLAM은 learned spatial intelligence stack의 <strong>trust kernel</strong>이 된다.
+        그리고 그 kernel을 먼저 정의하는 연구자가, foundation 3D 시대의 robotics 접점을 장악할 가능성이 크다.
+      </p>
+
+      <h3>Thesis 3. 다음 경쟁은 성능이 아니라 Liability다</h3>
+      <p>
+        현재 많은 3D foundation / reconstruction 논문은 더 빠르고, 더 일반적이고, 더 적은 view로,
+        더 그럴듯한 3D를 만든다고 주장한다.
+        그러나 field가 embodied AI와 robotics로 이동하는 순간, 성능 경쟁만으로는 부족해진다.
+        agent가 3D state를 실제 행동에 사용하기 시작하면, 다음 질문은 "얼마나 잘 맞는가?"가 아니라
+        <strong>"틀렸을 때 누가 책임지는가?"</strong>가 된다.
+      </p>
+      <p>
+        이것이 liability 문제다.
+        여기서 liability는 법적 책임만을 뜻하지 않는다.
+        system architecture 안에서 어떤 module이 어떤 실패를 감지하고, 어떤 module이 멈추고,
+        어떤 module이 추가 정보를 요구하고, 어떤 module이 state를 invalidate해야 하는지를 뜻한다.
+        즉 technical liability다.
+      </p>
+      <p>
+        현재 3D reconstruction field는 이 언어가 약하다.
+        robustness라는 말은 많지만, robustness는 너무 넓다.
+        uncertainty도 나오지만, uncertainty가 실제 decision boundary로 연결되는 경우는 제한적이다.
+        failure prediction, abstention, outlier rejection, re-query, active observation, state invalidation 같은 용어는
+        아직 field의 중심 언어가 아니다.
+        그런데 embodied agent에는 바로 이것들이 필요하다.
+      </p>
+      <p>
+        예를 들어 robot이 컵을 집으려 할 때, Gaussian representation이 예쁜 view를 렌더링하는 것은 충분하지 않다.
+        object boundary가 실제 grasp에 충분히 믿을 만한지, transparent surface가 hallucinated geometry인지,
+        occluded handle이 실제로 존재하는지, depth uncertainty가 grasp planner threshold를 넘는지 알아야 한다.
+        navigation에서도 마찬가지다.
+        freespace가 실제 freespace인지, dynamic object가 지나간 흔적인지,
+        reflective surface가 corridor로 잘못 복원된 것인지 판단해야 한다.
+      </p>
+      <p>
+        이런 상황에서 기존 benchmark는 너무 순하다.
+        평균 depth error, view synthesis quality, reconstruction IoU는 "성공한 상태에서 얼마나 좋은가"를 묻는다.
+        그러나 liability benchmark는 "실패할 때 어떻게 행동하는가"를 묻는다.
+        이것은 훨씬 더 어려운 질문이다.
+      </p>
+      <p>
+        좋은 future benchmark는 다음을 물어야 한다.
+        모델은 자신이 모르는 장면을 모른다고 말할 수 있는가?
+        sparse view에서 hallucination과 valid inference를 구분하는가?
+        calibration이 틀렸을 때 confidence가 무너지는가?
+        dynamic object가 map에 잘못 bake-in될 때 이를 감지하는가?
+        reflective / transparent / low-texture object에서 failure를 예측하는가?
+        실패 가능성이 높을 때 additional view를 요구하는가?
+        action 전에 state를 invalidate할 수 있는가?
+      </p>
+      <p>
+        이 관점에서 보면 다음 field leader는 가장 높은 PSNR을 내는 팀이 아닐 수 있다.
+        오히려 "3D state를 믿어도 되는 조건"을 정의하는 팀이 더 중요해질 수 있다.
+        이것은 benchmark, dataset, metric, system protocol, uncertainty representation, active perception policy가 모두 결합된 문제다.
+      </p>
+      <p>
+        여기서 교수급 또는 TC급 논의의 핵심은 방법론이 아니라 rule-setting이다.
+        어떤 실패를 failure로 부를 것인가?
+        어떤 uncertainty를 actionable uncertainty로 볼 것인가?
+        어떤 상황에서 system이 abstain해야 하는가?
+        어떤 추가 관측을 요구해야 하는가?
+        reconstruction output을 downstream agent가 사용할 때 필요한 metadata contract는 무엇인가?
+      </p>
+      <div class="warning">
+        다음 경쟁은 단순 성능 경쟁이 아니다. 다음 경쟁은 3D state의 liability boundary를 누가 정의하는가이다.
+      </div>
+      <p>
+        이 thesis는 3D reconstruction 연구를 훨씬 더 큰 문제로 끌어올린다.
+        3D는 이제 visual artifact가 아니라 decision substrate다.
+        decision substrate가 되면 반드시 책임 경계가 필요하다.
+        이 경계를 정의하지 못하는 3D foundation model은 demo로는 강해도, embodied AI infrastructure로는 약하다.
+        반대로 이 경계를 정의하는 연구는 method 성능이 조금 낮아도 field의 룰을 바꿀 수 있다.
+      </p>
     </section>
 
     <section id="why">
