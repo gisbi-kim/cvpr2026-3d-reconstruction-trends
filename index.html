@@ -105,6 +105,26 @@
       color: #2d333b;
       font-size: 13px;
     }
+    .page-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 18px 0 4px;
+    }
+    .page-tab {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px 12px;
+      background: #fff;
+      color: #2d333b;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .page-tab.active {
+      border-color: #9ab2ce;
+      background: #f2f7fd;
+      color: var(--blue);
+    }
     .source-actions {
       display: flex;
       flex-wrap: wrap;
@@ -241,6 +261,11 @@
       <div class="source-actions">
         <a class="source-button" href="https://gisbi-kim.github.io/cvpr2026-explorer" target="_blank" rel="noopener">참고한 CVPR 2026 Explorer 열기</a>
         <a class="source-button" href="https://github.com/gisbi-kim/cvpr2026-3d-reconstruction-trends" target="_blank" rel="noopener">GitHub repo</a>
+      </div>
+      <div class="page-tabs" aria-label="Page navigation">
+        <a class="page-tab active" href="index.html">Core Analysis</a>
+        <a class="page-tab" href="advanced_analysis.html">Advanced Analysis</a>
+        <a class="page-tab" href="cvpr2026_3d_recon_method_and_results_ko.html">Methods / Results</a>
       </div>
       <div class="grid">
         <div class="metric"><strong>864</strong><span>screened strict 후보</span></div>

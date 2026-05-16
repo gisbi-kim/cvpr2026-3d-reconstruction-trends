@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CVPR 2026 3D Reconstruction Advanced Analysis</title>
+  <style>
+    :root {
+      --ink: #16181c;
+      --muted: #5d6470;
+      --line: #dce1e8;
+      --soft: #f6f8fb;
+      --blue: #235789;
+      --teal: #1b7f79;
+      --green: #2f6f4e;
+      --orange: #a85f00;
+      --red: #9b2c2c;
+      --violet: #54428e;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: Arial, "Noto Sans KR", sans-serif;
+      line-height: 1.64;
+      background: #fff;
+    }
+    header {
+      background: #fbfcfe;
+      border-bottom: 1px solid var(--line);
+    }
+    .wrap {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 30px 28px;
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: 31px;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+    h2 {
+      margin: 34px 0 12px;
+      font-size: 23px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+    h3 {
+      margin: 22px 0 8px;
+      font-size: 17px;
+      letter-spacing: 0;
+    }
+    p { margin: 8px 0; }
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code {
+      background: #eef2f7;
+      border-radius: 4px;
+      padding: 1px 5px;
+      font-size: 0.95em;
+    }
+    .muted { color: var(--muted); }
+    .page-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 18px 0 4px;
+    }
+    .page-tab {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px 12px;
+      background: #fff;
+      color: #2d333b;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .page-tab.active {
+      border-color: #9ab2ce;
+      background: #f2f7fd;
+      color: var(--blue);
+    }
+    .thesis {
+      border: 1px solid #b9c8dc;
+      border-left: 5px solid var(--blue);
+      background: #f4f8fd;
+      border-radius: 8px;
+      padding: 16px 18px;
+      margin-top: 18px;
+      font-size: 18px;
+    }
+    .claim {
+      border-left: 4px solid var(--teal);
+      padding: 10px 12px;
+      background: #f4fbfa;
+      border-radius: 8px;
+      margin: 10px 0;
+    }
+    .warning {
+      border-left: 4px solid var(--red);
+      padding: 10px 12px;
+      background: #fff6f6;
+      border-radius: 8px;
+      margin: 10px 0;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      background: #fff;
+    }
+    .panel h3 { margin-top: 0; }
+    .panel.prior { border-top: 5px solid var(--blue); }
+    .panel.state { border-top: 5px solid var(--teal); }
+    .panel.memory { border-top: 5px solid var(--green); }
+    .panel.trust { border-top: 5px solid var(--orange); }
+    .panel.eval { border-top: 5px solid var(--violet); }
+    .panel.negative { border-top: 5px solid var(--red); }
+    .toc {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+    .toc a {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: #fff;
+      color: #2d333b;
+      font-size: 13px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 22px;
+      font-size: 14px;
+    }
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 9px 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th { background: #f2f5f9; }
+    ul { padding-left: 20px; }
+    li { margin: 5px 0; }
+    .tag {
+      display: inline-block;
+      border: 1px solid var(--line);
+      background: #f8fafc;
+      color: #30363d;
+      border-radius: 999px;
+      padding: 3px 7px;
+      margin: 3px 4px 3px 0;
+      font-size: 12px;
+    }
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr; }
+      .wrap { padding: 22px 18px; }
+      table { font-size: 13px; }
+      th, td { padding: 8px 6px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>Advanced Analysis: Unseen Trends를 읽는 3D Reconstruction Taxonomy</h1>
+      <p class="muted">기존 CVPR 2026 3D reconstruction 분석을 observed topic taxonomy에서 latent field-shift taxonomy로 확장한 교수급 논의용 해석틀.</p>
+      <div class="page-tabs" aria-label="Page navigation">
+        <a class="page-tab" href="index.html">Core Analysis</a>
+        <a class="page-tab active" href="advanced_analysis.html">Advanced Analysis</a>
+        <a class="page-tab" href="cvpr2026_3d_recon_method_and_results_ko.html">Methods / Results</a>
+      </div>
+      <div class="thesis">
+        보이는 taxonomy는 현재의 논문 분포를 설명한다. 그러나 진짜 신호는 taxonomy의 빈칸에 있다.
+        아직 논문화되지 않았지만 여러 클러스터가 동시에 압력을 가하고 있는 문제가 다음 연구장을 만든다.
+      </div>
+      <div class="toc">
+        <a href="#why">왜 taxonomy를 고쳐야 하는가</a>
+        <a href="#layers">새 5층 taxonomy</a>
+        <a href="#field-shift">Latent Field Shift</a>
+        <a href="#negative-space">Negative Space</a>
+        <a href="#agenda">Flagship Agenda</a>
+        <a href="#actions">실행계획</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section id="why">
+      <h2>1. 왜 taxonomy를 고쳐야 하는가</h2>
+      <p>
+        기존 taxonomy는 `3DGS`, `NeRF`, `VGGT`, `dynamic 4D`, `SLAM / localization`, `embodied AI`,
+        `metric evaluation`처럼 보이는 주제군을 정리한다. 이것은 현재 논문 분포를 읽는 데는 충분하다.
+        하지만 상위 수준의 분석은 이미 이름 붙은 군집을 재정렬하는 데서 멈추지 않는다.
+      </p>
+      <div class="claim">
+        교수급 분석의 핵심은 "많이 나온 주제"보다 "아직 이름 붙지 않았지만 여러 클러스터가 동시에 밀고 있는 문제"를 찾는 것이다.
+      </div>
+      <p>
+        따라서 질문을 바꿔야 한다. "이 논문은 어떤 방법론에 속하는가?"가 아니라
+        "이 논문군은 미래 spatial intelligence stack에서 어떤 권력과 기능을 차지하려 하는가?"를 물어야 한다.
+      </p>
+    </section>
+
+    <section id="layers">
+      <h2>2. 새 5층 taxonomy</h2>
+      <table>
+        <thead>
+          <tr><th>Layer</th><th>질문</th><th>예시</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Layer 0. Observed Method</td>
+            <td>논문은 표면적으로 무엇을 하는가?</td>
+            <td>3DGS, NeRF, VGGT, dynamic 4D, SLAM, embodied AI, evaluation</td>
+          </tr>
+          <tr>
+            <td>Layer 1. Functional Role</td>
+            <td>미래 stack에서 어떤 역할을 노리는가?</td>
+            <td>Geometry prior, spatial state, persistent memory, action interface, trust gate</td>
+          </tr>
+          <tr>
+            <td>Layer 2. Hidden Pressure</td>
+            <td>어떤 기술적 압력이 분야를 밀고 있는가?</td>
+            <td>optimization의 amortization, rendering의 mapping화, metric accuracy의 trust calibration화</td>
+          </tr>
+          <tr>
+            <td>Layer 3. Negative Space</td>
+            <td>아직 논문화되지 않았지만 곧 병목이 될 빈칸은 무엇인가?</td>
+            <td>failure prediction, dynamic persistence, map update, calibration drift, abstention</td>
+          </tr>
+          <tr>
+            <td>Layer 4. Strategic Bet</td>
+            <td>어떤 방향이 infrastructure가 되고, 어떤 방향은 demo bubble이 될 것인가?</td>
+            <td>learned prior와 trustworthy spatial state의 interface 정의</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="field-shift">
+      <h2>3. Latent Field-Shift Taxonomy</h2>
+      <div class="grid">
+        <div class="panel prior">
+          <h3>Amortized Geometry Prior</h3>
+          <p><span class="tag">VGGT</span><span class="tag">DUSt3R</span><span class="tag">MASt3R</span><span class="tag">feed-forward 3D</span></p>
+          <p><strong>숨은 의미:</strong> reconstruction이 per-scene optimization에서 foundation prior 기반 inference로 이동한다.</p>
+          <p><strong>교수급 질문:</strong> 이 prior를 final map이 아니라 uncertain SLAM factor로 쓸 수 있는가?</p>
+        </div>
+        <div class="panel state">
+          <h3>Renderable Spatial State</h3>
+          <p><span class="tag">3DGS</span><span class="tag">NeRF</span><span class="tag">radiance field</span></p>
+          <p><strong>숨은 의미:</strong> rendering representation이 map representation의 자리를 노린다.</p>
+          <p><strong>교수급 질문:</strong> action 가능한 map인가, 아니면 예쁜 rendering codec인가?</p>
+        </div>
+        <div class="panel memory">
+          <h3>Persistent World Memory</h3>
+          <p><span class="tag">4D</span><span class="tag">dynamic scene</span><span class="tag">long-term mapping</span></p>
+          <p><strong>숨은 의미:</strong> static reconstruction의 한계가 moving world에서 드러난다.</p>
+          <p><strong>교수급 질문:</strong> 무엇을 기억하고, 무엇을 잊고, 무엇을 다시 갱신해야 하는가?</p>
+        </div>
+        <div class="panel trust">
+          <h3>Trust Boundary</h3>
+          <p><span class="tag">uncertainty</span><span class="tag">metric reliability</span><span class="tag">calibration</span></p>
+          <p><strong>숨은 의미:</strong> 3D가 agent decision에 들어가면서 "정확도"가 "신뢰 경계" 문제로 바뀐다.</p>
+          <p><strong>교수급 질문:</strong> 틀렸을 때 멈출 수 있고, 모를 때 모른다고 말할 수 있는가?</p>
+        </div>
+        <div class="panel eval">
+          <h3>Evaluation Regime Shift</h3>
+          <p><span class="tag">benchmark</span><span class="tag">robustness</span><span class="tag">closed-loop</span></p>
+          <p><strong>숨은 의미:</strong> field의 권력은 방법론보다 evaluation standard에서 발생할 수 있다.</p>
+          <p><strong>교수급 질문:</strong> 다음 표준은 PSNR/Chamfer인가, failure prediction과 closed-loop success인가?</p>
+        </div>
+        <div class="panel negative">
+          <h3>Negative Space</h3>
+          <p><span class="tag">bad dynamics</span><span class="tag">no failure labels</span><span class="tag">sensor drift</span></p>
+          <p><strong>숨은 의미:</strong> 아직 이름 붙지 않은 빈칸이 다음 연구 주제가 된다.</p>
+          <p><strong>교수급 질문:</strong> 1년 뒤 모든 시스템이 부딪힐 문제는 무엇인가?</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="negative-space">
+      <h2>4. Negative Space: 현재 taxonomy가 직접 말하지 않는 것</h2>
+      <table>
+        <thead>
+          <tr><th>Unseen Trend</th><th>왜 중요한가</th><th>연구적 전환</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Reconstruction is becoming an interface problem</td>
+            <td>좋은 3D를 만드는 것보다 learned prior와 metric state가 어떻게 만나는지가 중요해진다.</td>
+            <td>method competition에서 interface definition으로 이동</td>
+          </tr>
+          <tr>
+            <td>3DGS is under pressure to become a map</td>
+            <td>3DGS는 rendering에는 강하지만 action에는 freespace, collision, affordance, uncertainty가 필요하다.</td>
+            <td>Gaussian + occupancy + scene graph + uncertainty</td>
+          </tr>
+          <tr>
+            <td>VGGT-like models will become probabilistic priors</td>
+            <td>SLAM을 바로 대체하기보다 SLAM backend의 measurement source가 될 가능성이 높다.</td>
+            <td>prior as measurement, not prior as final answer</td>
+          </tr>
+          <tr>
+            <td>Evaluation moves from visual fidelity to decision reliability</td>
+            <td>embodied agent는 예쁜 reconstruction보다 실패를 예측하고 회복할 수 있는 state가 필요하다.</td>
+            <td>PSNR/Chamfer에서 abstention, recovery, closed-loop success로 이동</td>
+          </tr>
+          <tr>
+            <td>The next field leader defines the spatial state interface</td>
+            <td>3D reconstruction, SLAM, embodied AI의 경계가 흐려질 때 표준 interface를 잡는 쪽이 field를 주도한다.</td>
+            <td>persistent spatial memory stack의 표준화</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="warning">
+        가장 큰 리스크는 "많이 보이는 키워드"를 미래로 착각하는 것이다. unseen trend는 빈도보다 결핍, 충돌, interface 부재에서 더 자주 나온다.
+      </div>
+    </section>
+
+    <section id="agenda">
+      <h2>5. Flagship Agenda</h2>
+      <div class="thesis">
+        Reliability-Aware Spatial Memory for Embodied Foundation Models
+      </div>
+      <p>
+        여러 연구 아이디어를 병렬로 나열하기보다 하나의 agenda로 묶는다.
+        핵심은 feed-forward 3D foundation model이 빠른 geometry prior를 제공하고,
+        SLAM/backend가 이를 metric belief로 보정하며, embodied agent가 이 belief를 persistent memory로 사용하는 stack이다.
+      </p>
+      <table>
+        <thead>
+          <tr><th>축</th><th>핵심 질문</th><th>연구 형태</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Prior as Measurement</td>
+            <td>VGGT/DUSt3R류 출력을 hard map이 아니라 uncertain factor로 넣을 수 있는가?</td>
+            <td>foundation 3D prior + factor graph / differentiable BA / online correction</td>
+          </tr>
+          <tr>
+            <td>Map as Memory</td>
+            <td>Gaussian, occupancy, scene graph를 agent가 갱신 가능한 persistent spatial memory로 만들 수 있는가?</td>
+            <td>hybrid representation, object-centric 4D memory, map update and forgetting</td>
+          </tr>
+          <tr>
+            <td>Evaluation as Trust</td>
+            <td>3D model은 언제 자신이 틀렸다는 것을 알고 멈추거나 재질의할 수 있는가?</td>
+            <td>failure prediction, abstention, re-localization, dynamic recovery, closed-loop success</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="actions">
+      <h2>6. 실행계획</h2>
+      <ol>
+        <li>기존 분석의 method taxonomy를 `Observed Topic Taxonomy`로 명명하고 그대로 보존한다.</li>
+        <li>각 observed topic에 `Functional Role`, `Hidden Pressure`, `Strategic Bet` 태그를 추가한다.</li>
+        <li>`Negative Space` 섹션을 만들어 아직 benchmark화되지 않은 결핍을 정리한다.</li>
+        <li>연구 제안은 `Reliability-Aware Spatial Memory for Embodied Foundation Models`라는 하나의 flagship agenda로 묶는다.</li>
+        <li>기존 메인 페이지에서는 `Core Analysis`, `Advanced Analysis`, `Methods / Results` 탭으로 페이지 간 이동을 만든다.</li>
+      </ol>
+      <p class="muted">
+        Markdown 기록:
+        <a href="advanced_taxonomy_analysis_ko.md">advanced_taxonomy_analysis_ko.md</a>,
+        <a href="advanced_taxonomy_action_plan_ko.md">advanced_taxonomy_action_plan_ko.md</a>
+      </p>
+    </section>
+  </main>
+</body>
+</html>

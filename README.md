@@ -11,6 +11,9 @@ https://gisbi-kim.github.io/cvpr2026-3d-reconstruction-trends/
 ## Contents
 
 - `index.html`: Korean trend conclusion and 2027 research agenda.
+- `advanced_analysis.html`: advanced taxonomy analysis for latent field shifts, negative space, and strategic bets.
+- `advanced_taxonomy_analysis_ko.md`: Markdown source note for the advanced taxonomy analysis.
+- `advanced_taxonomy_action_plan_ko.md`: Markdown action plan for implementing the advanced analysis layer.
 - `cvpr2026_3d_recon_method_and_results_ko.html`: method and result explanation.
 - `cvpr2026_3d_recon_materials.xlsx`: Excel workbook with summary, seed list, strict reading list, broad candidates, and cluster summary.
 - `cvpr2026_3d_recon_curated_relevance.csv`: relevance-curated pass over the 864 strict candidates.
