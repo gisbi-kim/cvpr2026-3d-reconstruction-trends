@@ -4,6 +4,10 @@ Static research brief and materials derived from the public CVPR 2026 Paper Expl
 
 https://gisbi-kim.github.io/cvpr2026-explorer
 
+## Hosted Site
+
+https://gisbi-kim.github.io/cvpr2026-3d-reconstruction-trends/
+
 ## Contents
 
 - `index.html`: Korean trend conclusion and 2027 research agenda.
@@ -14,4 +18,3 @@ https://gisbi-kim.github.io/cvpr2026-explorer
 - `cvpr2026_3d_recon_broad_candidates.csv`: 1,417-paper broad candidate list.
 - `data/cvpr2026_app_data.json`: downloaded explorer JSON snapshot used for processing.
 - `scripts/`: reproducibility scripts.
-
