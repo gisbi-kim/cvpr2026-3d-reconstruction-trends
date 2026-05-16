@@ -8,6 +8,47 @@
 
 따라서 기존 taxonomy를 폐기할 필요는 없다. 오히려 기존 taxonomy를 `Observed Layer`로 유지하고, 그 위에 `Functional Role`, `Hidden Pressure`, `Negative Space`, `Strategic Bet`를 얹어야 한다.
 
+## Failure Axis Agenda: trend thesis에서 연구주제 제안으로
+
+기존 분석의 약점은 "3D reconstruction이 spatial memory / world-state compiler / trust kernel로 간다"는 큰 방향을 말했지만, 그 방향이 곧바로 연구주제 선정의 새 축으로 바뀌지는 않았다는 점이다. 더 강한 분석은 "어떤 주제가 뜨는가"가 아니라 **"분야 전체가 반복해서 실패하지만 아직 죄목으로 부르지 못하는 것은 무엇인가"**를 정의해야 한다.
+
+핵심 판정은 다음이다.
+
+> CVPR 2026의 3D reconstruction은 이미 "더 잘 복원하는가"의 단계에서 "믿고 행동해도 되는가"의 단계로 넘어가고 있다. 그런데 분야는 아직 이 전환에 필요한 실패 언어를 갖고 있지 않다. 다음 강한 연구주제는 새로운 3D model이 아니라, foundation 3D가 책임져야 할 실패를 이름 붙이고 측정 가능하게 만드는 것이다.
+
+### 새 죄목 5개
+
+| 새 죄목 | 정의 | 측정 후보 |
+|---|---|---|
+| Action-Irrelevant Geometry | reconstruction score는 좋지만 downstream action에 필요한 정보가 빠져 있는 실패. geometry가 보기에는 그럴듯하지만 robot이 움직이고 잡고 피하는 데 필요한 cost, collision, affordance, freespace와 연결되지 않는다. | action-critical region error, reconstruction-to-control-cost transfer, geometry error vs navigation/manipulation failure, control-relevant uncertainty calibration |
+| Confidence Without Accountability | 모델이 그럴듯한 3D를 자신 있게 내지만, 언제 틀렸는지 말하지 못하는 실패. uncertainty가 있더라도 실제 decision boundary나 abstention policy로 연결되지 않는다. | high-confidence wrong geometry rate, failure prediction AUROC, abstention precision/recall, uncertainty-to-downstream-failure calibration |
+| Static-State Laundering | dynamic world를 static map처럼 그럴듯하게 세탁하는 실패. moving object, transient structure, occlusion artifact가 persistent map에 잘못 bake-in된다. | map contamination rate, dynamic object invalidation latency, reappearing object identity consistency, state revision accuracy |
+| Pose-Free Amnesia | pose/calibration 없이 결과는 나오지만, 그 결과가 어떤 metric 책임을 지는지 잊어버리는 실패. pose uncertainty가 해결된 것이 아니라 model 내부로 숨겨진다. | hidden scale drift, calibration perturbation sensitivity, sparse-view pose ambiguity, metric consistency under sensor shift |
+| Passive-View Bias | 주어진 view에서는 잘하지만, 언제 더 봐야 하는지 모르는 실패. embodied agent가 필요한 것은 single-shot reconstruction이 아니라 uncertainty를 줄이기 위한 acquisition policy다. | next-best-view under uncertainty, information gain per motion cost, recovery view budget, active reconstruction success after first failure |
+
+### 왜 이것이 research topic인가
+
+이 agenda는 trend following이 아니라 failure-axis proposal이다.
+
+- 새로운 해법보다 아직 이름 붙지 않은 실패를 찾는다.
+- VGGT/3DGS/4D의 성능 경쟁 뒤에 있는 action relevance, accountability, state contamination, hidden pose uncertainty, active acquisition을 끌어낸다.
+- PSNR/Chamfer/depth error가 놓치는 liability benchmark를 제안한다.
+- failure taxonomy -> benchmark -> trust kernel -> active recovery -> standardization으로 이어지는 연구 프로그램을 만든다.
+- 가설이 틀려도 failure taxonomy, stress protocol, negative result, baseline comparison, benchmark가 남는다.
+
+### 4-paper research program
+
+| Paper | 목표 | 핵심 산출물 |
+|---|---|---|
+| Paper 1. Failure Taxonomy and Benchmark | Foundation 3D가 agent decision에서 실패하는 5개 죄목을 정의하고 측정한다. | failure taxonomy, stress dataset, metric suite, baseline audit |
+| Paper 2. Trust Kernel | VGGT/3DGS/pose-free output을 믿을지, 보류할지, backend로 보정할지 결정하는 arbitration layer를 만든다. | uncertainty calibration, abstention policy, state invalidation rule, factor-backend interface |
+| Paper 3. Active Recovery and Acquisition Policy | 실패 가능성이 높을 때 추가 관측을 요구하고, 어떤 view를 더 봐야 하는지 결정한다. | next-best-view protocol, recovery view budget, information gain vs motion cost benchmark |
+| Paper 4. Standardization Across CV and Robotics | visual reconstruction metric과 robotics task metric을 연결하는 shared evaluation protocol을 만든다. | cross-domain benchmark, metadata contract, downstream task adapters, reproducible leaderboard |
+
+### 한 문장 주제화
+
+> 현재 3D reconstruction은 visual fidelity와 geometric accuracy를 기준으로 발전해왔지만, embodied deployment에서는 action-relevant failure, accountability, dynamic state contamination, hidden pose uncertainty, active acquisition cost가 병목이다. 본 연구 agenda는 이 실패들을 처음으로 측정 가능하고 최적화 가능한 대상으로 만들며, foundation 3D liability evaluation이라는 새로운 연구축을 제안한다.
+
 ## 기존 taxonomy의 한계
 
 기존 taxonomy는 다음 질문에 답한다.

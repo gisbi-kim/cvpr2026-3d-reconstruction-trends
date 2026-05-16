@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CVPR 2026 3D Reconstruction Advanced Analysis</title>
+  <title>Foundation 3D Failure Axes for Embodied Spatial Intelligence</title>
   <style>
     :root {
       --ink: #16181c;
@@ -173,18 +173,20 @@
 <body>
   <header>
     <div class="wrap">
-      <h1>Advanced Analysis: Unseen Trends를 읽는 3D Reconstruction Taxonomy</h1>
-      <p class="muted">기존 CVPR 2026 3D reconstruction 분석을 observed topic taxonomy에서 latent field-shift taxonomy로 확장한 교수급 논의용 해석틀.</p>
+      <h1>Foundation 3D가 아직 책임지지 않는 실패들</h1>
+      <p class="muted">CVPR 2026 3D reconstruction을 trend taxonomy가 아니라, embodied spatial intelligence가 앞으로 피할 수 없게 될 failure axis와 benchmark agenda로 다시 읽은 분석.</p>
       <div class="page-tabs" aria-label="Page navigation">
         <a class="page-tab" href="index.html">Core Analysis</a>
         <a class="page-tab active" href="advanced_analysis.html">Advanced Analysis</a>
         <a class="page-tab" href="cvpr2026_3d_recon_method_and_results_ko.html">Methods / Results</a>
       </div>
       <div class="thesis">
-        보이는 taxonomy는 현재의 논문 분포를 설명한다. 그러나 진짜 신호는 taxonomy의 빈칸에 있다.
-        아직 논문화되지 않았지만 여러 클러스터가 동시에 압력을 가하고 있는 문제가 다음 연구장을 만든다.
+        핵심 판정: 좋은 연구주제는 새로운 3D model을 하나 더 만드는 것이 아니라,
+        foundation 3D가 agent decision에 들어갈 때 발생하는 실패를 이름 붙이고 측정 가능하게 만드는 것이다.
+        다음 경쟁은 reconstruction score가 아니라 failure language, benchmark, liability boundary를 누가 정의하는가이다.
       </div>
       <div class="toc">
+        <a href="#failure-axis-agenda">Failure Axis Agenda</a>
         <a href="#executed-analysis">실제 적용 결과</a>
         <a href="#strategic-theses">Three Strategic Theses</a>
         <a href="#why">왜 taxonomy를 고쳐야 하는가</a>
@@ -198,8 +200,179 @@
   </header>
 
   <main class="wrap">
+    <section id="failure-axis-agenda">
+      <h2>0. Trend thesis에서 failure-axis proposal로</h2>
+      <p>
+        이전 분석의 약점은 "3D reconstruction이 spatial memory / world-state compiler / trust kernel로 간다"는 큰 방향을 말했지만,
+        그 방향이 곧바로 연구주제 선정의 새 축으로 바뀌지는 않았다는 점이다.
+        더 강한 분석은 "어떤 주제가 뜨는가"가 아니라
+        <strong>"분야 전체가 반복해서 실패하지만 아직 죄목으로 부르지 못하는 것은 무엇인가"</strong>를 정의해야 한다.
+      </p>
+      <div class="claim">
+        CVPR 2026의 3D reconstruction은 이미 "더 잘 복원하는가"의 단계에서 "믿고 행동해도 되는가"의 단계로 넘어가고 있다.
+        그런데 분야는 아직 이 전환에 필요한 실패 언어를 갖고 있지 않다.
+        다음 강한 연구주제는 새로운 3D model이 아니라, foundation 3D가 책임져야 할 실패를 이름 붙이고 측정 가능하게 만드는 것이다.
+      </div>
+
+      <h3>0.1 새 죄목 5개</h3>
+      <table>
+        <thead>
+          <tr><th>새 죄목</th><th>정의</th><th>왜 지금 중요한가</th><th>측정 후보</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Action-Irrelevant Geometry</strong></td>
+            <td>
+              reconstruction score는 좋지만 downstream action에 필요한 정보가 빠져 있는 실패.
+              geometry가 보기에는 그럴듯하지만, robot이 움직이고 잡고 피하는 데 필요한 cost, collision, affordance, freespace와 연결되지 않는다.
+            </td>
+            <td>
+              3DGS, occupancy, world model이 agent state로 들어가면서 "보이는 3D"와 "행동 가능한 3D"의 차이가 커진다.
+              이 차이를 측정하지 않으면 visual benchmark가 실제 autonomy를 배신한다.
+            </td>
+            <td>
+              action-critical region error, reconstruction-to-control-cost transfer, geometry error vs navigation/manipulation failure,
+              control-relevant uncertainty calibration.
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Confidence Without Accountability</strong></td>
+            <td>
+              모델이 그럴듯한 3D를 자신 있게 내지만, 언제 틀렸는지 말하지 못하는 실패.
+              uncertainty가 있더라도 실제 decision boundary나 abstention policy로 연결되지 않는다.
+            </td>
+            <td>
+              curated set에서 `foundation/prior` claim은 210건, `robustness`는 149건이지만
+              `failure`는 6건, `outlier`는 4건, `abstention`은 0건이다.
+              즉 field는 강한 prior를 만들고 있지만 책임 언어는 빈약하다.
+            </td>
+            <td>
+              high-confidence wrong geometry rate, failure prediction AUROC, abstention precision/recall,
+              uncertainty-to-downstream-failure calibration.
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Static-State Laundering</strong></td>
+            <td>
+              dynamic world를 static map처럼 그럴듯하게 세탁하는 실패.
+              moving object, transient structure, occlusion artifact가 persistent map에 잘못 bake-in된다.
+            </td>
+            <td>
+              Dynamic/4D, Gaussian, benchmark, robotics cluster가 강하게 교차한다.
+              이는 dynamic reconstruction이 새 topic이어서가 아니라 static-map assumption이 무너지고 있다는 신호다.
+            </td>
+            <td>
+              map contamination rate, dynamic object invalidation latency, reappearing object identity consistency,
+              state revision accuracy, temporal belief correction cost.
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Pose-Free Amnesia</strong></td>
+            <td>
+              pose/calibration 없이 결과는 나오지만, 그 결과가 어떤 metric 책임을 지는지 잊어버리는 실패.
+              pose uncertainty가 해결된 것이 아니라 model 내부로 숨겨진다.
+            </td>
+            <td>
+              pose-free, calibration-free, SfM-free reconstruction 흐름은 강해지고 있다.
+              이것은 SLAM의 승리도 패배도 아니라, SLAM prerequisite이 black-box prior 안으로 흡수되는 현상이다.
+            </td>
+            <td>
+              hidden scale drift, calibration perturbation sensitivity, sparse-view pose ambiguity,
+              metric consistency under sensor shift, pose-free confidence collapse.
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Passive-View Bias</strong></td>
+            <td>
+              주어진 view에서는 잘하지만, 언제 더 봐야 하는지 모르는 실패.
+              embodied agent가 필요한 것은 single-shot reconstruction이 아니라 uncertainty를 줄이기 위한 acquisition policy다.
+            </td>
+            <td>
+              active reconstruction, active mapping, streaming 4D, trajectory-conditioned occupancy가 이미 신호를 낸다.
+              그러나 많은 논문은 여전히 "주어진 input에서 output을 만든다"는 passive protocol에 묶여 있다.
+            </td>
+            <td>
+              next-best-view under uncertainty, information gain per motion cost, recovery view budget,
+              active reconstruction success after first failure.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>0.2 왜 이것이 research topic인가</h3>
+      <table>
+        <thead>
+          <tr><th>교수 코멘트의 기준</th><th>이 페이지의 새 적용</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>새로운 해법보다 아직 이름 붙지 않은 실패를 찾는다</td>
+            <td>Foundation 3D의 5개 실패 죄목을 정의한다.</td>
+          </tr>
+          <tr>
+            <td>트렌드가 숨기는 변수를 찾는다</td>
+            <td>VGGT/3DGS/4D의 성능 경쟁 뒤에 있는 action relevance, accountability, state contamination, hidden pose uncertainty, active acquisition을 끌어낸다.</td>
+          </tr>
+          <tr>
+            <td>남들이 풀고 있는 문제보다 잘못 재고 있는 문제를 잡는다</td>
+            <td>PSNR/Chamfer/depth error가 놓치는 liability benchmark를 제안한다.</td>
+          </tr>
+          <tr>
+            <td>논문 하나가 아니라 질문의 공급망을 만든다</td>
+            <td>failure taxonomy -> benchmark -> trust kernel -> active recovery -> standardization으로 이어지는 연구 프로그램을 만든다.</td>
+          </tr>
+          <tr>
+            <td>틀려도 남는 주제여야 한다</td>
+            <td>가설이 틀려도 failure taxonomy, stress protocol, negative result, baseline comparison, benchmark가 남는다.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>0.3 4-paper research program</h3>
+      <table>
+        <thead>
+          <tr><th>Paper</th><th>목표</th><th>핵심 산출물</th><th>왜 오래 가는가</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Paper 1. Failure Taxonomy and Benchmark</td>
+            <td>Foundation 3D가 agent decision에서 실패하는 5개 죄목을 정의하고 측정한다.</td>
+            <td>failure taxonomy, stress dataset, metric suite, baseline audit.</td>
+            <td>방법론이 아니라 평가 언어를 만든다.</td>
+          </tr>
+          <tr>
+            <td>Paper 2. Trust Kernel</td>
+            <td>VGGT/3DGS/pose-free output을 믿을지, 보류할지, backend로 보정할지 결정하는 arbitration layer를 만든다.</td>
+            <td>uncertainty calibration, abstention policy, state invalidation rule, factor-backend interface.</td>
+            <td>SLAM을 legacy pipeline이 아니라 liability layer로 재정의한다.</td>
+          </tr>
+          <tr>
+            <td>Paper 3. Active Recovery and Acquisition Policy</td>
+            <td>실패 가능성이 높을 때 추가 관측을 요구하고, 어떤 view를 더 봐야 하는지 결정한다.</td>
+            <td>next-best-view protocol, recovery view budget, information gain vs motion cost benchmark.</td>
+            <td>reconstruction을 passive inference에서 embodied information gathering으로 옮긴다.</td>
+          </tr>
+          <tr>
+            <td>Paper 4. Standardization Across CV and Robotics</td>
+            <td>visual reconstruction metric과 robotics task metric을 연결하는 shared evaluation protocol을 만든다.</td>
+            <td>cross-domain benchmark, metadata contract, downstream task adapters, reproducible leaderboard.</td>
+            <td>CV와 robotics 사이의 rule-setting 위치를 잡는다.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>0.4 한 문장 주제화</h3>
+      <div class="thesis">
+        현재 3D reconstruction은 visual fidelity와 geometric accuracy를 기준으로 발전해왔지만,
+        embodied deployment에서는 action-relevant failure, accountability, dynamic state contamination,
+        hidden pose uncertainty, active acquisition cost가 병목이다.
+        본 연구 agenda는 이 실패들을 처음으로 측정 가능하고 최적화 가능한 대상으로 만들며,
+        foundation 3D liability evaluation이라는 새로운 연구축을 제안한다.
+      </div>
+    </section>
+
     <section id="executed-analysis">
-      <h2>0. 실제 적용 결과: 436편 core/bridge를 다시 읽으면 무엇이 보이는가</h2>
+      <h2>1. Supporting Evidence: 436편 core/bridge를 다시 읽으면 무엇이 보이는가</h2>
       <p>
         이 페이지의 advanced taxonomy를 실제 CVPR 2026 3D reconstruction curated set에 적용했다.
         기준은 864편 strict 후보 중 `core_reconstruction` 362편과 `strong_bridge` 74편, 총 436편이다.
@@ -423,7 +596,7 @@
     </section>
 
     <section id="strategic-theses">
-      <h2>1. Three Strategic Theses: taxonomy를 넘어선 field memo</h2>
+      <h2>2. Three Strategic Theses: taxonomy를 넘어선 field memo</h2>
       <div class="warning">
         아래 세 thesis는 기존 taxonomy를 더 정교하게 만드는 목적이 아니다. 오히려 taxonomy가 가리는 것을 드러내기 위한 내부 전략 메모다.
         핵심 질문은 "무슨 주제가 많은가"가 아니라, "3D reconstruction이라는 이름 아래 실제로 어떤 권력과 책임 경계가 재편되는가"다.
@@ -618,7 +791,7 @@
     </section>
 
     <section id="why">
-      <h2>1. 왜 taxonomy를 고쳐야 하는가</h2>
+      <h2>3. 왜 taxonomy를 고쳐야 하는가</h2>
       <p>
         기존 taxonomy는 `3DGS`, `NeRF`, `VGGT`, `dynamic 4D`, `SLAM / localization`, `embodied AI`,
         `metric evaluation`처럼 보이는 주제군을 정리한다. 이것은 현재 논문 분포를 읽는 데는 충분하다.
@@ -634,7 +807,7 @@
     </section>
 
     <section id="layers">
-      <h2>2. 새 5층 taxonomy</h2>
+      <h2>4. 새 5층 taxonomy</h2>
       <table>
         <thead>
           <tr><th>Layer</th><th>질문</th><th>예시</th></tr>
@@ -670,7 +843,7 @@
     </section>
 
     <section id="field-shift">
-      <h2>3. Latent Field-Shift Taxonomy</h2>
+      <h2>5. Latent Field-Shift Taxonomy</h2>
       <div class="grid">
         <div class="panel prior">
           <h3>Amortized Geometry Prior</h3>
@@ -712,7 +885,7 @@
     </section>
 
     <section id="negative-space">
-      <h2>4. Negative Space: 현재 taxonomy가 직접 말하지 않는 것</h2>
+      <h2>6. Negative Space: 현재 taxonomy가 직접 말하지 않는 것</h2>
       <table>
         <thead>
           <tr><th>Unseen Trend</th><th>왜 중요한가</th><th>연구적 전환</th></tr>
@@ -751,7 +924,7 @@
     </section>
 
     <section id="agenda">
-      <h2>5. Flagship Agenda</h2>
+      <h2>7. Flagship Agenda</h2>
       <div class="thesis">
         Reliability-Aware Spatial Memory for Embodied Foundation Models
       </div>
@@ -785,7 +958,7 @@
     </section>
 
     <section id="actions">
-      <h2>6. 실행계획과 완료된 반영</h2>
+      <h2>8. 실행계획과 완료된 반영</h2>
       <ol>
         <li>기존 분석의 method taxonomy를 `Observed Topic Taxonomy`로 보존했다.</li>
         <li>436편 core/bridge set을 `Functional Role`, `Hidden Pressure`, `Strategic Bet` 기준으로 재해석했다.</li>
